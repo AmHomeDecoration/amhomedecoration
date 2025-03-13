@@ -5,15 +5,21 @@ import { ArrowRight } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section 
-      className="relative h-screen flex items-center justify-center overflow-hidden" 
-      style={{
-        backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0" 
+        style={{
+          backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      
+      {/* Overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black/20 z-10"></div>
+      
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight">
@@ -32,9 +38,6 @@ const HeroSection = () => {
           </Button>
         </div>
       </div>
-
-      {/* Dark overlay for better text visibility */}
-      <div className="absolute inset-0 bg-black/30 z-10"></div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
