@@ -34,7 +34,7 @@ const AboutSection = () => {
           </div>
           <div className="order-1 lg:order-2 rounded-lg overflow-hidden shadow-2xl">
             <div className="relative h-[500px]">
-              <img alt="Portrait d'architecte d'intérieur" className="object-cover w-full h-full" src="/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg" />
+              <img alt="Portrait d'architecte d'intérieur" className="w-full h-full object-cover" src="/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg" />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
                 <p className="text-white font-serif text-xl">
                   "Chaque espace a une histoire à raconter"
