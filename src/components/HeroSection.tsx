@@ -7,7 +7,9 @@ const HeroSection = () => {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center" 
       style={{
-        backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`
+        backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
       }}
     >
       {/* Content */}

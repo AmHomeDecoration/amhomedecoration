@@ -10,15 +10,7 @@ import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div 
-      className="flex min-h-screen flex-col"
-      style={{ 
-        backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
-    >
+    <div className="flex min-h-screen flex-col">
       <TopBanner />
       <Navbar />
       <main>
