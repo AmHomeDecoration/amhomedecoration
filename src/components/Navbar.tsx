@@ -32,9 +32,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
           <a href="#" className="text-lg md:text-xl font-serif font-medium">
-            <span className="text-design-charcoal">Refined</span>
-            <span className="text-design-taupe">Interior</span>
-            <span className="text-design-charcoal">Vision</span>
+            <span className="text-design-charcoal">AM</span>
+            <span className="text-design-taupe"> Home </span>
+            <span className="text-design-charcoal">Décoration</span>
           </a>
 
           {/* Desktop Navigation */}
