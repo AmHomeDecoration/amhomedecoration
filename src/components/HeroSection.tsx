@@ -7,7 +7,7 @@ const HeroSection = () => {
   return (
     <section 
       className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1920&auto=format&fit=crop')` }}
+      style={{ backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')` }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
