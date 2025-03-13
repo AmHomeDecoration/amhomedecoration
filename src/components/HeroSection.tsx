@@ -10,9 +10,6 @@ const HeroSection = () => {
         backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 z-10"></div>
-
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight">
