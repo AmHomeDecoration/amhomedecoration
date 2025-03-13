@@ -39,11 +39,14 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="/" className="text-foreground hover:text-design-taupe transition-colors">
               Accueil
             </a>
             <a href="#about" className="text-foreground hover:text-design-taupe transition-colors">
               À propos
+            </a>
+            <a href="/prestations" className="text-foreground hover:text-design-taupe transition-colors">
+              Prestations
             </a>
             <a href="#projects" className="text-foreground hover:text-design-taupe transition-colors">
               Réalisations
@@ -75,7 +78,7 @@ const Navbar = () => {
         } md:hidden`}
       >
         <a
-          href="#"
+          href="/"
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
@@ -87,6 +90,13 @@ const Navbar = () => {
           onClick={() => setIsOpen(false)}
         >
           À propos
+        </a>
+        <a
+          href="/prestations"
+          className="text-2xl font-medium"
+          onClick={() => setIsOpen(false)}
+        >
+          Prestations
         </a>
         <a
           href="#projects"
