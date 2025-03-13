@@ -1,12 +1,17 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+
 const HeroSection = () => {
-  return <section className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center" style={{
-    backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`
-  }}>
+  return (
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center" 
+      style={{
+        backgroundImage: `url('/lovable-uploads/aa795fd3-f3ad-448c-9c1b-27d46cb7f6eb.png')`
+      }}
+    >
       {/* Overlay */}
-      <div className=""></div>
+      <div className="absolute inset-0 bg-black/50 z-10"></div>
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
@@ -35,6 +40,8 @@ const HeroSection = () => {
           </svg>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default HeroSection;
