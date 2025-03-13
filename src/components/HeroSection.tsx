@@ -2,16 +2,23 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import backgroundImage from '/background-image.jpg'; // Importez votre image ici
 
 const HeroSection = () => {
+  // Using an Unsplash image instead of a local image that doesn't exist
+  const backgroundImageUrl = "https://images.unsplash.com/photo-1649972904349-6e44c42644a7";
+  
   return (
     <section 
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+      style={{ 
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/30 z-10"></div>
+      <div className="absolute inset-0 bg-black/50 z-10"></div>
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
