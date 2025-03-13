@@ -60,6 +60,9 @@ export default {
 					taupe: '#9F9A91',
 					charcoal: '#363636',
 					black: '#222222',
+					gold: '#D4AF37',       // Couleur dorée similaire à celle du logo
+					gold_light: '#E5C97D', // Variante plus claire de l'or
+					gold_dark: '#A58728',  // Variante plus foncée de l'or
 				},
 			},
 			borderRadius: {
@@ -70,6 +73,7 @@ export default {
 			fontFamily: {
 				sans: ['Montserrat', 'sans-serif'],
 				serif: ['Playfair Display', 'serif'],
+				script: ['"Dancing Script"', 'cursive'], // Police de script élégante pour les éléments décoratifs
 			},
 			keyframes: {
 				'accordion-down': {

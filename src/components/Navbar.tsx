@@ -31,30 +31,32 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <a href="#" className="text-lg md:text-xl font-serif font-medium">
-            <span className="text-design-charcoal">AM</span>
-            <span className="text-design-taupe"> Home </span>
-            <span className="text-design-charcoal">Décoration</span>
+          <a href="/" className="flex items-center">
+            <img 
+              src="/lovable-uploads/0e4a3a7e-df4f-440f-8443-77e8984f4f00.png" 
+              alt="Anne Marie Home Décoration" 
+              className="h-12 md:h-16" 
+            />
           </a>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="/" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="/" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Accueil
             </a>
-            <a href="#about" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="#about" className="text-foreground hover:text-design-gold transition-colors font-medium">
               À propos
             </a>
-            <a href="/prestations" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="/prestations" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Prestations
             </a>
-            <a href="#projects" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="#projects" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Réalisations
             </a>
-            <a href="#contact" className="text-foreground hover:text-design-taupe transition-colors">
+            <a href="#contact" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Contact
             </a>
-            <Button variant="outline" className="border-design-taupe text-design-charcoal hover:bg-design-taupe hover:text-white">
+            <Button variant="outline" className="border-design-gold text-design-gold hover:bg-design-gold hover:text-white">
               Devis gratuit
             </Button>
           </div>
@@ -112,7 +114,9 @@ const Navbar = () => {
         >
           Contact
         </a>
-        <Button className="mt-4 w-40">Devis gratuit</Button>
+        <Button className="mt-4 w-40 bg-design-gold hover:bg-design-gold/90 text-white">
+          Devis gratuit
+        </Button>
       </div>
     </nav>
   );
