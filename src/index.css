@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -114,6 +113,10 @@
   
   .gold-gradient {
     @apply bg-gradient-to-r from-design-gold-dark via-design-gold to-design-gold-light;
+  }
+  
+  .top-banner-adjust {
+    @apply mt-7;
   }
 }
 
