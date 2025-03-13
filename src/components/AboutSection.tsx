@@ -1,10 +1,7 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-
 const AboutSection = () => {
-  return (
-    <section id="about" className="section-padding bg-design-beige">
+  return <section id="about" className="section-padding bg-design-beige">
       <div className="container mx-auto container-padding">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="order-2 lg:order-1">
@@ -37,11 +34,7 @@ const AboutSection = () => {
           </div>
           <div className="order-1 lg:order-2 rounded-lg overflow-hidden shadow-2xl">
             <div className="relative h-[500px]">
-              <img
-                src="/placeholder.svg"
-                alt="Portrait d'architecte d'intérieur"
-                className="object-cover w-full h-full"
-              />
+              <img alt="Portrait d'architecte d'intérieur" className="object-cover w-full h-full" src="/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg" />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
                 <p className="text-white font-serif text-xl">
                   "Chaque espace a une histoire à raconter"
@@ -51,8 +44,6 @@ const AboutSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutSection;
