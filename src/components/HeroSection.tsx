@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const HeroSection = () => {
-  // Using an Unsplash image instead of a local image that doesn't exist
-  const backgroundImageUrl = "https://images.unsplash.com/photo-1649972904349-6e44c42644a7";
+  // Using a kitchen image from Unsplash
+  const backgroundImageUrl = "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9";
   
   return (
     <section 
