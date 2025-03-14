@@ -4,7 +4,13 @@ import { ArrowLeft, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { Card, CardContent } from '@/components/ui/card';
-import GallerySection from './GallerySection';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem, 
+  CarouselPrevious, 
+  CarouselNext 
+} from '@/components/ui/carousel';
 
 export interface ProjectDetail {
   id: number;
@@ -95,9 +101,36 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           )}
         </div>
 
-        {/* Gallery Section - Using our new component */}
+        {/* Gallery Carousel - Replacing the GallerySection component */}
         {galleryImages.length > 0 && (
-          <GallerySection images={galleryImages} />
+          <div className="mb-12">
+            <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Galerie du projet</h2>
+            
+            <Carousel className="w-full relative">
+              <CarouselContent>
+                {galleryImages.map((image, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1">
+                      <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
+                        <img 
+                          src={image} 
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              
+              <div className="absolute -left-4 top-1/2 -translate-y-1/2">
+                <CarouselPrevious className="bg-white/80 hover:bg-white" />
+              </div>
+              <div className="absolute -right-4 top-1/2 -translate-y-1/2">
+                <CarouselNext className="bg-white/80 hover:bg-white" />
+              </div>
+            </Carousel>
+          </div>
         )}
 
         {/* Storytelling sections */}
