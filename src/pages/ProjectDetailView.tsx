@@ -35,14 +35,20 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
   const solutions = project.solutions || "Nous avons opté pour un agencement ouvert en supprimant certaines cloisons non porteuses. Les matériaux naturels (bois, pierre) ont été préservés et mis en valeur. L'éclairage a été entièrement repensé avec un mélange de sources directes et indirectes pour créer une ambiance chaleureuse.";
   const results = project.results || "Le résultat est un espace à la fois contemporain et chaleureux, où la lumière circule librement. Le client bénéficie désormais d'un lieu de vie fluide, fonctionnel et esthétique qui correspond parfaitement à son mode de vie et à ses attentes.";
 
-  // Default gallery images if none provided
+  // Ensure we have a gallery array to work with
   const galleryImages = project.gallery && project.gallery.length > 0 
     ? project.gallery 
-    : project.afterImage 
-      ? [project.afterImage] 
-      : project.image 
-        ? [project.image]
-        : [];
+    : [];
+
+  // Add main image to gallery if it's not already in gallery and not used in before/after
+  if (project.image && !project.hasBeforeAfter && !galleryImages.includes(project.image)) {
+    galleryImages.push(project.image);
+  }
+  
+  // Add after image to gallery if it's not already in gallery
+  if (project.afterImage && !galleryImages.includes(project.afterImage)) {
+    galleryImages.push(project.afterImage);
+  }
 
   // Create before/after pairs for gallery
   const beforeAfterPairs = project.beforeAfterGallery || 
