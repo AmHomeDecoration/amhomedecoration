@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 const ProjectGallery = ({ images }: { images: string[] }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -37,7 +38,6 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
         ))}
       </div>
       
-      {/* Image Modal */}
       {selectedImage && (
         <div 
           className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
