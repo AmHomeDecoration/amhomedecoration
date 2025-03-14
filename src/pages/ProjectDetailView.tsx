@@ -50,10 +50,15 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
     galleryImages.push(project.afterImage);
   }
 
-  // Create before/after pairs for gallery - removing this section to avoid showing duplicated before/after content
-  const beforeAfterPairs = project.beforeAfterGallery || [];
+  // Create before/after pairs for gallery
+  let beforeAfterPairs = project.beforeAfterGallery || [];
   
-  // Only show BeforeAfterGallery if we have explicit beforeAfterGallery pairs, not the default ones
+  // If we have a beforeImage and afterImage but no dedicated beforeAfterGallery,
+  // create a single pair to show in the before/after gallery
+  if (beforeAfterPairs.length === 0 && project.beforeImage && project.afterImage) {
+    beforeAfterPairs = [{ before: project.beforeImage, after: project.afterImage }];
+  }
+  
   const hasBeforeAfterGallery = beforeAfterPairs.length > 0;
 
   return (
@@ -76,7 +81,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           title={project.title}
         />
 
-        {/* Before/After Gallery Section - Only if explicit beforeAfterGallery pairs exist */}
+        {/* Before/After Gallery Section - Limited to max 4 pairs with pagination */}
         {hasBeforeAfterGallery && (
           <BeforeAfterGallery beforeAfterPairs={beforeAfterPairs} />
         )}
