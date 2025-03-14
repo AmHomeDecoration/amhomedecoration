@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import ProjectDetailView from './ProjectDetailView';
 
 const projectCategories = [
   { id: 'all', label: 'Tous' },
@@ -30,6 +31,14 @@ const projects = [
     beforeImage: "/projets/villa-mediterraneenne/avant.jpg",
     afterImage: "/projets/villa-mediterraneenne/apres.png",
     hasBeforeAfter: true,
+    challenge: "Cette villa méditerranéenne souffrait d'un aménagement démodé et cloisonné, empêchant la lumière naturelle de circuler. Les espaces manquaient de caractère et ne correspondaient plus au mode de vie des propriétaires.",
+    solutions: "Nous avons réorganisé l'espace en créant une grande pièce de vie ouverte. Les matériaux traditionnels ont été conservés et mis en valeur, complétés par des touches contemporaines. Un nouveau système d'éclairage naturel et artificiel a été conçu pour maximiser la luminosité.",
+    results: "La villa rayonne désormais d'une nouvelle élégance méditerranéenne. L'espace de vie fluide et lumineux offre des vues imprenables sur le jardin. Les propriétaires profitent pleinement d'un intérieur à la fois authentique et moderne, parfaitement adapté à leur quotidien.",
+    gallery: [
+      "/projets/villa-mediterraneenne/galerie-1.jpg",
+      "/projets/villa-mediterraneenne/galerie-2.jpg",
+      "/projets/villa-mediterraneenne/galerie-3.jpg",
+    ]
   },
   {
     id: 2,
@@ -39,6 +48,9 @@ const projects = [
     location: "Perpignan",
     image: "/projets/appartement-haussmannien/principal.jpg",
     hasBeforeAfter: false,
+    challenge: "Cet appartement haussmannien possédait un fort potentiel architectural mais manquait d'une identité stylistique cohérente. Le client souhaitait préserver les éléments d'époque tout en apportant une touche contemporaine.",
+    solutions: "Une palette de couleurs douces et élégantes a été sélectionnée pour mettre en valeur les moulures et parquets d'origine. Le mobilier sur mesure allie fonctionnalité moderne et esthétique classique. Les textiles et accessoires ont été choisis pour ajouter chaleur et personnalité.",
+    results: "L'appartement incarne désormais un équilibre parfait entre héritage architectural et confort contemporain. Chaque pièce raconte une histoire cohérente, créant une atmosphère à la fois sophistiquée et accueillante qui correspond parfaitement aux aspirations du client."
   },
   {
     id: 3,
@@ -49,6 +61,9 @@ const projects = [
     beforeImage: "/projets/maison-campagne/avant.jpg",
     afterImage: "/projets/maison-campagne/apres.png",
     hasBeforeAfter: true,
+    challenge: "Cette maison de campagne traditionnelle nécessitait une rénovation complète. L'agencement était inefficace, les installations techniques obsolètes, et l'atmosphère générale sombre et datée.",
+    solutions: "Une approche clé en main a permis de repenser entièrement l'espace. Les travaux ont inclus la refonte des circuits électriques et de plomberie, la création d'une cuisine ouverte, et l'optimisation de l'isolation thermique et phonique. Les matériaux locaux ont été privilégiés pour respecter l'authenticité du lieu.",
+    results: "La transformation a donné naissance à une maison de campagne alliant charme rustique et confort moderne. L'efficacité énergétique a été considérablement améliorée, réduisant les coûts de chauffage. Les propriétaires bénéficient désormais d'un havre de paix parfaitement adapté à leurs besoins, tant pour y vivre au quotidien que pour y recevoir famille et amis."
   },
   {
     id: 4,
@@ -58,6 +73,9 @@ const projects = [
     location: "Perpignan",
     image: "/projets/loft-industriel/principal.jpg",
     hasBeforeAfter: false,
+    challenge: "Cet ancien entrepôt présentait un défi de taille : transformer un espace industriel brut en habitat confortable tout en préservant son caractère authentique. Les grandes hauteurs sous plafond et l'absence de cloisons nécessitaient une approche créative.",
+    solutions: "Nous avons conçu un aménagement qui respecte l'esprit industriel du lieu tout en créant des zones distinctes. Des matériaux bruts comme l'acier, le béton ciré et le bois ont été utilisés. Des mezzanines ont été créées pour exploiter la hauteur, et un système de cloisons mobiles permet de moduler l'espace selon les besoins.",
+    results: "Le loft offre désormais un cadre de vie exceptionnellement spacieux et flexible. L'âme industrielle du bâtiment a été préservée tout en offrant un confort optimal. Le propriétaire dispose d'un espace unique qui lui permet d'adapter son intérieur selon ses activités et qui impressionne par son caractère architectural distinctif."
   },
   {
     id: 5,
@@ -67,6 +85,9 @@ const projects = [
     location: "Canohès",
     image: "/projets/canohes/maison-contemporaine.jpg",
     hasBeforeAfter: false,
+    challenge: "Cette construction récente à Canohès présentait des espaces bien conçus architecturalement mais manquait de caractère et de chaleur. Les propriétaires souhaitaient un intérieur à la fois contemporain et accueillant, avec une attention particulière portée à la fonctionnalité pour leur famille.",
+    solutions: "Une approche basée sur la simplicité et l'élégance a guidé nos choix. Une palette de couleurs neutres ponctuée de touches colorées apporte personnalité et dynamisme. Le mobilier a été sélectionné pour son design contemporain mais confortable, et des solutions de rangement intégrées maximisent l'espace disponible.",
+    results: "La maison est désormais un exemple parfait d'équilibre entre esthétique contemporaine et confort familial. Chaque espace répond précisément aux besoins quotidiens des propriétaires tout en offrant une belle harmonie visuelle. L'atmosphère chaleureuse et sereine qu'ils recherchaient a été créée, faisant de leur maison un véritable lieu de vie et de partage."
   }
 ];
 
@@ -75,6 +96,7 @@ const PROJECTS_PER_PAGE = 4;
 const ProjectsSection = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   const filteredProjects = activeCategory === 'all'
     ? projects
@@ -98,6 +120,25 @@ const ProjectsSection = () => {
     // Scroll to top of projects section
     document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Handle project selection
+  const handleProjectClick = (projectId: number) => {
+    setSelectedProject(projectId);
+    // Prevent scrolling when the detail view is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Handle closing project detail view
+  const handleCloseProjectDetail = () => {
+    setSelectedProject(null);
+    // Restore scrolling
+    document.body.style.overflow = 'auto';
+  };
+
+  // Find the selected project details
+  const selectedProjectDetails = selectedProject !== null
+    ? projects.find(project => project.id === selectedProject)
+    : null;
 
   return (
     <section id="projects" className="section-padding">
@@ -157,7 +198,11 @@ const ProjectsSection = () => {
                       </span>
                     </div>
                     <p className="text-muted-foreground mb-4">{project.description}</p>
-                    <Button variant="outline" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => handleProjectClick(project.id)}
+                    >
                       Voir le projet
                     </Button>
                   </div>
@@ -210,6 +255,14 @@ const ProjectsSection = () => {
           </Button>
         </div>
       </div>
+
+      {/* Project Detail View */}
+      {selectedProjectDetails && (
+        <ProjectDetailView 
+          project={selectedProjectDetails}
+          onClose={handleCloseProjectDetail}
+        />
+      )}
     </section>
   );
 };
