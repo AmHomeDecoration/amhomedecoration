@@ -30,6 +30,13 @@ export const projectsData: Project[] = [
     challenge: "Cet appartement haussmannien avait conservé son charme d'origine mais souffrait d'un agencement obsolète, avec des pièces cloisonnées et sombres qui ne correspondaient plus aux standards de vie actuels.",
     solutions: "Nous avons préservé les éléments architecturaux d'époque (moulures, parquet) tout en créant une circulation plus fluide entre les espaces. La cuisine a été ouverte sur le séjour et les matériaux nobles ont été mis en valeur par un éclairage repensé.",
     results: "L'appartement a retrouvé son élégance d'antan tout en offrant le confort moderne. Les propriétaires bénéficient désormais d'un espace lumineux qui respecte l'âme du lieu tout en répondant à leurs besoins contemporains.",
+    gallery: [
+      "/lovable-uploads/461611f7-d247-4387-9721-44288ae1f7cc.png",
+      "/lovable-uploads/f35a5805-7552-4b9e-963e-fa11284f5948.png",
+      "/lovable-uploads/29c8eca6-4f17-459d-928e-87e25d8fa3ef.png", 
+      "/lovable-uploads/52765a0d-9fe5-4d4b-8e0e-d138a0e4010c.png",
+      "/lovable-uploads/999575d9-e90d-4481-8598-f539cad82f82.png"
+    ],
     beforeAfterGallery: [
       {
         before: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",

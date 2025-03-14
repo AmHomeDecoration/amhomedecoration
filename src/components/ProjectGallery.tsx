@@ -50,7 +50,7 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
       <h3 className="text-3xl font-serif mb-6 text-center">DÉTAILS DU PROJET</h3>
       
       {/* Grid Gallery Layout */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {currentImages.map((img, index) => (
           <div 
             key={index} 
@@ -118,7 +118,7 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
           className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
           onClick={handleCloseImage}
         >
-          <div className="relative max-w-4xl w-full">
+          <div className="relative max-w-5xl w-full">
             <Button 
               variant="ghost" 
               size="icon"
