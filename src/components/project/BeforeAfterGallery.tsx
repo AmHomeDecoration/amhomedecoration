@@ -64,13 +64,14 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
     if (beforeAfterApi) {
       setTimeout(() => {
         beforeAfterApi.canDrag = true;
-      }, 100);
+      }, 200);
     }
   };
 
   const carouselOptions = {
     loop: true,
-    draggable: !isDraggingSlider
+    draggable: !isDraggingSlider,
+    dragFree: false
   };
 
   return (
@@ -112,12 +113,12 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
         {pairCount > 1 && (
           <>
             <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselPrevious className="bg-white/80 hover:bg-white border-none">
+              <CarouselPrevious className="bg-white/80 hover:bg-white border-none shadow-sm">
                 <ChevronLeft className="h-4 w-4" />
               </CarouselPrevious>
             </div>
             <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselNext className="bg-white/80 hover:bg-white border-none">
+              <CarouselNext className="bg-white/80 hover:bg-white border-none shadow-sm">
                 <ChevronRight className="h-4 w-4" />
               </CarouselNext>
             </div>
@@ -125,17 +126,21 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
         )}
         
         {pairCount > 1 && (
-          <div className="flex justify-center gap-1 mt-4">
+          <div className="flex justify-center gap-2 mt-4">
             {limitedPairs.map((_, index) => (
               <button
                 key={index}
                 className={cn(
-                  "h-2 w-2 rounded-full transition-all duration-300",
-                  beforeAfterIndex === index ? "bg-design-charcoal w-4" : "bg-gray-300"
+                  "h-8 px-3 rounded transition-all duration-300",
+                  beforeAfterIndex === index 
+                    ? "bg-design-charcoal text-white" 
+                    : "bg-gray-200 text-gray-600 hover:bg-gray-300"
                 )}
                 onClick={() => beforeAfterApi?.scrollTo(index)}
                 aria-label={`Aller à l'image ${index + 1}`}
-              />
+              >
+                {index + 1}
+              </button>
             ))}
           </div>
         )}
