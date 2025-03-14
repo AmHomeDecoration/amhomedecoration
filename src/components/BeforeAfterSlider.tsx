@@ -5,9 +5,16 @@ import { MoveHorizontal } from 'lucide-react';
 interface BeforeAfterSliderProps {
   beforeImage: string;
   afterImage: string;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 
-const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afterImage }) => {
+const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ 
+  beforeImage, 
+  afterImage,
+  onDragStart,
+  onDragEnd
+}) => {
   const [position, setPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,11 +23,14 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
     e.preventDefault();
     e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
     setIsDragging(true);
+    if (onDragStart) onDragStart();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
     e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
     setIsDragging(true);
+    if (onDragStart) onDragStart();
   };
 
   const handleMove = (clientX: number) => {
@@ -44,6 +54,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
 
   const handleEnd = () => {
     setIsDragging(false);
+    if (onDragEnd) onDragEnd();
   };
 
   useEffect(() => {

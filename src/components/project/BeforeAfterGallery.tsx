@@ -38,28 +38,51 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
     
     beforeAfterApi.on('select', onSelectHandler);
     
-    // Listen for pointer down events on slider to disable carousel dragging
+    // Listen for slider interactions
     const sliderElements = document.querySelectorAll('.before-after-slider');
     
-    const handleSliderInteraction = (e: MouseEvent | TouchEvent) => {
-      // Prevent carousel from moving when interacting with the slider
+    const handleSliderMouseDown = (e: Event) => {
+      e.stopPropagation();
+      setIsDraggingSlider(true);
+      
+      // Disable carousel dragging entirely when interacting with slider
       if (beforeAfterApi) {
-        beforeAfterApi.stop();
+        beforeAfterApi.clickAllowed = false;
+      }
+    };
+    
+    const handleGlobalMouseUp = () => {
+      setIsDraggingSlider(false);
+      
+      // Re-enable carousel dragging when slider interaction is done
+      if (beforeAfterApi) {
+        setTimeout(() => {
+          beforeAfterApi.clickAllowed = true;
+        }, 10);
       }
     };
     
     sliderElements.forEach(el => {
-      el.addEventListener('mousedown', handleSliderInteraction);
-      el.addEventListener('touchstart', handleSliderInteraction);
+      el.addEventListener('mousedown', handleSliderMouseDown);
+      el.addEventListener('touchstart', handleSliderMouseDown, { passive: false });
     });
     
+    // Add global mouse/touch up handlers
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    window.addEventListener('touchend', handleGlobalMouseUp);
+    
     return () => {
-      beforeAfterApi.off('select', onSelectHandler);
+      if (beforeAfterApi) {
+        beforeAfterApi.off('select', onSelectHandler);
+      }
       
       sliderElements.forEach(el => {
-        el.removeEventListener('mousedown', handleSliderInteraction);
-        el.removeEventListener('touchstart', handleSliderInteraction);
+        el.removeEventListener('mousedown', handleSliderMouseDown);
+        el.removeEventListener('touchstart', handleSliderMouseDown);
       });
+      
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      window.removeEventListener('touchend', handleGlobalMouseUp);
     };
   }, [beforeAfterApi]);
 
@@ -69,7 +92,7 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
 
   const carouselOptions = {
     loop: true,
-    draggable: true
+    draggable: !isDraggingSlider // Disable dragging when slider is being used
   };
 
   return (
@@ -98,6 +121,20 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
                   <BeforeAfterSlider 
                     beforeImage={pair.before}
                     afterImage={pair.after}
+                    onDragStart={() => {
+                      setIsDraggingSlider(true);
+                      if (beforeAfterApi) {
+                        beforeAfterApi.clickAllowed = false;
+                      }
+                    }}
+                    onDragEnd={() => {
+                      setIsDraggingSlider(false);
+                      if (beforeAfterApi) {
+                        setTimeout(() => {
+                          beforeAfterApi.clickAllowed = true;
+                        }, 10);
+                      }
+                    }}
                   />
                 </div>
               </div>
