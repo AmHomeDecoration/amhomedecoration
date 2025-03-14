@@ -70,7 +70,7 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
           {limitedPairs.map((pair, index) => (
             <CarouselItem key={index} className="w-full">
               <div className="p-1">
-                <div className="h-64 md:h-80">
+                <div className="h-[500px]">
                   <BeforeAfterSlider 
                     beforeImage={pair.before}
                     afterImage={pair.after}

@@ -37,7 +37,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
 
   // Ensure we have a gallery array to work with
   const galleryImages = project.gallery && project.gallery.length > 0 
-    ? project.gallery 
+    ? [...project.gallery]  // Use spread operator to create a copy
     : [];
 
   // Add main image to gallery if it's not already in gallery and not used in before/after
@@ -72,14 +72,16 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           onClose={onClose}
         />
 
-        {/* Main Project Image */}
-        <ProjectMainImage 
-          hasBeforeAfter={project.hasBeforeAfter}
-          beforeImage={project.beforeImage}
-          afterImage={project.afterImage}
-          image={project.image}
-          title={project.title}
-        />
+        {/* Main Project Image - remplacé par le BeforeAfterGallery pour les projets avec before/after */}
+        {!hasBeforeAfterGallery && (
+          <ProjectMainImage 
+            hasBeforeAfter={project.hasBeforeAfter}
+            beforeImage={project.beforeImage}
+            afterImage={project.afterImage}
+            image={project.image}
+            title={project.title}
+          />
+        )}
 
         {/* Before/After Gallery Section - Limited to max 4 pairs with pagination */}
         {hasBeforeAfterGallery && (

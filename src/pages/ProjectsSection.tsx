@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,6 +16,7 @@ interface Project {
   afterImage?: string;
   hasBeforeAfter: boolean;
   gallery?: string[];
+  beforeAfterGallery?: Array<{before: string; after: string}>;
 }
 
 const ProjectsSection: React.FC = () => {
@@ -36,10 +38,17 @@ const ProjectsSection: React.FC = () => {
         beforeImage: "/lovable-uploads/project1_before.jpg",
         afterImage: "/lovable-uploads/project1_after.jpg",
         hasBeforeAfter: true,
+        beforeAfterGallery: [
+          { before: "/lovable-uploads/project1_before.jpg", after: "/lovable-uploads/project1_after.jpg" },
+          { before: "/lovable-uploads/project1-1.jpg", after: "/lovable-uploads/project1-2.jpg" },
+          { before: "/lovable-uploads/project1-3.jpg", after: "/lovable-uploads/project2-1.jpg" }
+        ],
         gallery: [
           "/lovable-uploads/project1-1.jpg",
           "/lovable-uploads/project1-2.jpg",
-          "/lovable-uploads/project1-3.jpg"
+          "/lovable-uploads/project1-3.jpg",
+          "/lovable-uploads/project2-1.jpg",
+          "/lovable-uploads/project2-2.jpg"
         ]
       },
       {
@@ -52,7 +61,9 @@ const ProjectsSection: React.FC = () => {
         hasBeforeAfter: false,
         gallery: [
           "/lovable-uploads/project2-1.jpg",
-          "/lovable-uploads/project2-2.jpg"
+          "/lovable-uploads/project2-2.jpg",
+          "/lovable-uploads/project1-1.jpg",
+          "/lovable-uploads/project1-2.jpg"
         ]
       },
     ];
