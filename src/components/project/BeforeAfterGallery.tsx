@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/carousel';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 
 interface BeforeAfterPair {
   before: string;
@@ -69,27 +70,11 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
           {limitedPairs.map((pair, index) => (
             <CarouselItem key={index} className="w-full">
               <div className="p-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
-                    <img 
-                      src={pair.before} 
-                      alt={`Avant ${index + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute bottom-4 left-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
-                      Avant
-                    </div>
-                  </div>
-                  <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
-                    <img 
-                      src={pair.after} 
-                      alt={`Après ${index + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
-                      Après
-                    </div>
-                  </div>
+                <div className="h-64 md:h-80">
+                  <BeforeAfterSlider 
+                    beforeImage={pair.before}
+                    afterImage={pair.after}
+                  />
                 </div>
               </div>
             </CarouselItem>

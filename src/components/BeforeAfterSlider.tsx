@@ -1,116 +1,109 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { MoveHorizontal } from 'lucide-react';
 
 interface BeforeAfterSliderProps {
   beforeImage: string;
   afterImage: string;
-  beforeAlt?: string;
-  afterAlt?: string;
 }
 
-const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
-  beforeImage,
-  afterImage,
-  beforeAlt = "Avant",
-  afterAlt = "Après"
-}) => {
-  const [sliderPosition, setSliderPosition] = useState(50);
+const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afterImage }) => {
+  const [position, setPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Handle mouse down on slider handle
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  // Handle touch start on slider handle
   const handleTouchStart = () => {
     setIsDragging(true);
   };
 
-  // Update slider position on mouse move
+  const handleMove = (clientX: number) => {
+    if (!isDragging || !containerRef.current) return;
+    
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const newPosition = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    
+    setPosition(newPosition);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    handleMove(e.clientX);
+  };
+
+  const handleTouchMove = (e: TouchEvent) => {
+    handleMove(e.touches[0].clientX);
+  };
+
+  const handleEnd = () => {
+    setIsDragging(false);
+  };
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging && sliderRef.current) {
-        const sliderRect = sliderRef.current.getBoundingClientRect();
-        const newPosition = ((e.clientX - sliderRect.left) / sliderRect.width) * 100;
-        setSliderPosition(Math.min(Math.max(newPosition, 0), 100));
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging && sliderRef.current && e.touches[0]) {
-        const sliderRect = sliderRef.current.getBoundingClientRect();
-        const newPosition = ((e.touches[0].clientX - sliderRect.left) / sliderRect.width) * 100;
-        setSliderPosition(Math.min(Math.max(newPosition, 0), 100));
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleEnd);
       window.addEventListener('touchmove', handleTouchMove);
-      window.addEventListener('mouseup', handleMouseUp);
-      window.addEventListener('touchend', handleMouseUp);
+      window.addEventListener('touchend', handleEnd);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleEnd);
     }
-
+    
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchend', handleMouseUp);
+      window.removeEventListener('touchend', handleEnd);
     };
   }, [isDragging]);
 
   return (
     <div 
-      ref={sliderRef}
+      ref={containerRef}
       className="before-after-slider rounded-lg overflow-hidden"
     >
-      {/* Before Image */}
-      <img
-        src={beforeImage}
-        alt={beforeAlt}
+      <img 
+        src={beforeImage} 
+        alt="Avant" 
         className="slider-image"
       />
-      
-      {/* After Image */}
-      <img
-        src={afterImage}
-        alt={afterAlt}
+      <img 
+        src={afterImage} 
+        alt="Après" 
         className="slider-image slider-image-after"
-        style={{ clipPath: `polygon(${sliderPosition}% 0, 100% 0, 100% 100%, ${sliderPosition}% 100%)` }}
+        style={{ clipPath: `polygon(${position}% 0, 100% 0, 100% 100%, ${position}% 100%)` }}
       />
       
-      {/* Slider Handle */}
       <div 
-        className="slider-handle"
-        style={{ left: `${sliderPosition}%` }}
+        className="slider-handle" 
+        style={{ left: `${position}%` }}
       />
       
-      {/* Slider Button */}
-      <div
+      <div 
         className="slider-button"
-        style={{ left: `${sliderPosition}%` }}
+        style={{ left: `${position}%` }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 18L3 12L9 6" stroke="#363636" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M15 6L21 12L15 18" stroke="#363636" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <MoveHorizontal size={20} color="#333" />
       </div>
       
-      {/* Labels */}
-      <div className="absolute bottom-4 left-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal z-10">
-        {beforeAlt}
+      {/* "Avant" label */}
+      <div className="absolute bottom-4 left-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
+        Avant
       </div>
-      <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal z-10">
-        {afterAlt}
+      
+      {/* "Après" label */}
+      <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
+        Après
       </div>
     </div>
   );

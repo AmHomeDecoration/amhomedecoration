@@ -1,7 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
-/* ... keep existing code */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Before/After Slider Styles */
+@layer base {
+  :root {
+    --background: 30 20% 97%;
+    --foreground: 20 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 10%;
+
+    --primary: 24 10% 10%;
+    --primary-foreground: 30 20% 97%;
+
+    --secondary: 30 15% 83%;
+    --secondary-foreground: 20 10% 10%;
+
+    --muted: 30 10% 93%;
+    --muted-foreground: 25 5% 45%;
+
+    --accent: 30 15% 83%;
+    --accent-foreground: 20 10% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 20 10% 85%;
+    --input: 20 10% 85%;
+    --ring: 24 5% 60%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14% 10%;
+    --foreground: 30 10% 95%;
+
+    --card: 20 14% 12%;
+    --card-foreground: 30 10% 95%;
+
+    --popover: 20 14% 12%;
+    --popover-foreground: 30 10% 95%;
+
+    --primary: 30 10% 95%;
+    --primary-foreground: 20 14% 10%;
+
+    --secondary: 12 6% 20%;
+    --secondary-foreground: 30 10% 95%;
+
+    --muted: 12 6% 15%;
+    --muted-foreground: 24 5% 65%;
+
+    --accent: 12 6% 20%;
+    --accent-foreground: 30 10% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 12 6% 25%;
+    --input: 12 6% 25%;
+    --ring: 24 5% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  .elegant-script {
+    @apply font-script;
+  }
+  
+  .gold-text {
+    @apply text-design-gold;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+  
+  .fade-in-element {
+    @apply opacity-0 motion-safe:animate-fade-in;
+  }
+  
+  .scale-in-element {
+    @apply opacity-0 motion-safe:animate-scale-in;
+  }
+  
+  .gold-gradient {
+    @apply bg-gradient-to-r from-design-gold-dark via-design-gold to-design-gold-light;
+  }
+  
+  .top-banner-adjust {
+    @apply mt-7;
+  }
+}
+
+/* Video Background */
+.video-background {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  background-size: cover;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+/* Before/After Slider */
 .before-after-slider {
   position: relative;
   width: 100%;
@@ -125,5 +259,3 @@
 }
 
 /* Other styles */
-
-/* ... keep existing code */
