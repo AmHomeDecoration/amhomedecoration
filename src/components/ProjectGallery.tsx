@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const ProjectGallery = ({ images }: { images: string[] }) => {
