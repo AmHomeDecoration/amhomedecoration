@@ -4,6 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import ProjectDetailView, { ProjectDetail } from './ProjectDetailView';
+import GallerySection from './GallerySection';
+
+// Sample images for the gallery
+const sampleGalleryImages = [
+  "/images/projet1-1.jpg",
+  "/images/projet1-2.jpg",
+  "/images/projet1-3.jpg",
+  "/images/projet1-4.jpg",
+  "/images/projet1-5.jpg",
+];
 
 interface Project {
   id: number;
@@ -193,6 +203,11 @@ const ProjectsSection: React.FC = () => {
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Découvrez une sélection de mes projets récents de décoration et rénovation d'intérieur dans les Pyrénées-Orientales.
           </p>
+        </div>
+        
+        {/* Sample Gallery Section - Just after the heading */}
+        <div className="mb-12">
+          <GallerySection images={sampleGalleryImages} title="Galerie d'exemples" />
         </div>
         
         <Tabs defaultValue="all" className="mb-12">
