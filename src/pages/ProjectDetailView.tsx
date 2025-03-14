@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
@@ -39,6 +40,13 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
   const challenge = project.challenge || "Le client souhaitait moderniser son espace tout en préservant le caractère authentique du lieu. L'espace était cloisonné, manquait de lumière naturelle et nécessitait une réorganisation complète pour répondre aux besoins actuels.";
   const solutions = project.solutions || "Nous avons opté pour un agencement ouvert en supprimant certaines cloisons non porteuses. Les matériaux naturels (bois, pierre) ont été préservés et mis en valeur. L'éclairage a été entièrement repensé avec un mélange de sources directes et indirectes pour créer une ambiance chaleureuse.";
   const results = project.results || "Le résultat est un espace à la fois contemporain et chaleureux, où la lumière circule librement. Le client bénéficie désormais d'un lieu de vie fluide, fonctionnel et esthétique qui correspond parfaitement à son mode de vie et à ses attentes.";
+
+  // State for carousel
+  const [beforeAfterApi, setBeforeAfterApi] = useState<any>(null);
+  const [beforeAfterIndex, setBeforeAfterIndex] = useState(0);
+  
+  const [galleryApi, setGalleryApi] = useState<any>(null);
+  const [galleryIndex, setGalleryIndex] = useState(0);
 
   // Default gallery images if none provided
   const galleryImages = project.gallery && project.gallery.length > 0 
@@ -117,63 +125,65 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           <div className="mb-12">
             <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Avant / Après</h2>
             
-            <Carousel className="w-full relative">
-              {({ api, selectedIndex }) => (
-                <>
-                  <CarouselContent>
-                    {beforeAfterPairs.map((pair, index) => (
-                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
-                        <div className="p-1">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
-                              <img 
-                                src={pair.before} 
-                                alt={`Avant ${index + 1}`}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              />
-                              <div className="absolute bottom-4 left-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
-                                Avant
-                              </div>
-                            </div>
-                            <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
-                              <img 
-                                src={pair.after} 
-                                alt={`Après ${index + 1}`}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              />
-                              <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
-                                Après
-                              </div>
-                            </div>
+            <Carousel 
+              className="w-full relative"
+              setApi={setBeforeAfterApi}
+              opts={{
+                loop: true
+              }}
+            >
+              <CarouselContent>
+                {beforeAfterPairs.map((pair, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
+                    <div className="p-1">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
+                          <img 
+                            src={pair.before} 
+                            alt={`Avant ${index + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute bottom-4 left-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
+                            Avant
                           </div>
                         </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  
-                  <div className="absolute -left-4 top-1/2 -translate-y-1/2">
-                    <CarouselPrevious className="bg-white/80 hover:bg-white" />
-                  </div>
-                  <div className="absolute -right-4 top-1/2 -translate-y-1/2">
-                    <CarouselNext className="bg-white/80 hover:bg-white" />
-                  </div>
-                  
-                  {/* Dots Navigation */}
-                  <div className="flex justify-center gap-1 mt-4">
-                    {beforeAfterPairs.map((_, index) => (
-                      <button
-                        key={index}
-                        className={cn(
-                          "h-2 w-2 rounded-full transition-all duration-300",
-                          selectedIndex === index ? "bg-design-charcoal w-4" : "bg-gray-300"
-                        )}
-                        onClick={() => api?.scrollTo(index)}
-                        aria-label={`Aller à l'image ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
+                        <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
+                          <img 
+                            src={pair.after} 
+                            alt={`Après ${index + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded-full text-sm font-medium text-design-charcoal">
+                            Après
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              
+              <div className="absolute -left-4 top-1/2 -translate-y-1/2">
+                <CarouselPrevious className="bg-white/80 hover:bg-white" />
+              </div>
+              <div className="absolute -right-4 top-1/2 -translate-y-1/2">
+                <CarouselNext className="bg-white/80 hover:bg-white" />
+              </div>
+              
+              {/* Dots Navigation */}
+              <div className="flex justify-center gap-1 mt-4">
+                {beforeAfterPairs.map((_, index) => (
+                  <button
+                    key={index}
+                    className={cn(
+                      "h-2 w-2 rounded-full transition-all duration-300",
+                      beforeAfterIndex === index ? "bg-design-charcoal w-4" : "bg-gray-300"
+                    )}
+                    onClick={() => beforeAfterApi?.scrollTo(index)}
+                    aria-label={`Aller à l'image ${index + 1}`}
+                  />
+                ))}
+              </div>
             </Carousel>
           </div>
         )}
@@ -183,48 +193,50 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           <div className="mb-12">
             <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Galerie du projet</h2>
             
-            <Carousel className="w-full relative">
-              {({ api, selectedIndex }) => (
-                <>
-                  <CarouselContent>
-                    {galleryImages.map((image, index) => (
-                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                        <div className="p-1">
-                          <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
-                            <img 
-                              src={image} 
-                              alt={`Photo ${index + 1}`}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            />
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  
-                  <div className="absolute -left-4 top-1/2 -translate-y-1/2">
-                    <CarouselPrevious className="bg-white/80 hover:bg-white" />
-                  </div>
-                  <div className="absolute -right-4 top-1/2 -translate-y-1/2">
-                    <CarouselNext className="bg-white/80 hover:bg-white" />
-                  </div>
-                  
-                  {/* Dots Navigation */}
-                  <div className="flex justify-center gap-1 mt-4">
-                    {galleryImages.map((_, index) => (
-                      <button
-                        key={index}
-                        className={cn(
-                          "h-2 w-2 rounded-full transition-all duration-300",
-                          selectedIndex === index ? "bg-design-charcoal w-4" : "bg-gray-300"
-                        )}
-                        onClick={() => api?.scrollTo(index)}
-                        aria-label={`Aller à l'image ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
+            <Carousel 
+              className="w-full relative"
+              setApi={setGalleryApi}
+              opts={{
+                loop: true
+              }}
+            >
+              <CarouselContent>
+                {galleryImages.map((image, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1">
+                      <div className="overflow-hidden rounded-lg shadow-md h-64 relative group">
+                        <img 
+                          src={image} 
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              
+              <div className="absolute -left-4 top-1/2 -translate-y-1/2">
+                <CarouselPrevious className="bg-white/80 hover:bg-white" />
+              </div>
+              <div className="absolute -right-4 top-1/2 -translate-y-1/2">
+                <CarouselNext className="bg-white/80 hover:bg-white" />
+              </div>
+              
+              {/* Dots Navigation */}
+              <div className="flex justify-center gap-1 mt-4">
+                {galleryImages.map((_, index) => (
+                  <button
+                    key={index}
+                    className={cn(
+                      "h-2 w-2 rounded-full transition-all duration-300",
+                      galleryIndex === index ? "bg-design-charcoal w-4" : "bg-gray-300"
+                    )}
+                    onClick={() => galleryApi?.scrollTo(index)}
+                    aria-label={`Aller à l'image ${index + 1}`}
+                  />
+                ))}
+              </div>
             </Carousel>
           </div>
         )}

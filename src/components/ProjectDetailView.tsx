@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from './BeforeAfterSlider';
@@ -47,6 +47,35 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
   
   const [galleryApi, setGalleryApi] = useState<any>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
+
+  // Update index when carousel changes
+  useEffect(() => {
+    if (!beforeAfterApi) return;
+    
+    const onSelectHandler = () => {
+      setBeforeAfterIndex(beforeAfterApi.selectedScrollSnap());
+    };
+    
+    beforeAfterApi.on('select', onSelectHandler);
+    
+    return () => {
+      beforeAfterApi.off('select', onSelectHandler);
+    };
+  }, [beforeAfterApi]);
+
+  useEffect(() => {
+    if (!galleryApi) return;
+    
+    const onSelectHandler = () => {
+      setGalleryIndex(galleryApi.selectedScrollSnap());
+    };
+    
+    galleryApi.on('select', onSelectHandler);
+    
+    return () => {
+      galleryApi.off('select', onSelectHandler);
+    };
+  }, [galleryApi]);
 
   // Default gallery images if none provided
   const galleryImages = project.gallery && project.gallery.length > 0 
@@ -129,8 +158,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
               className="w-full relative"
               setApi={setBeforeAfterApi}
               opts={{
-                loop: true,
-                onChange: (index) => setBeforeAfterIndex(index),
+                loop: true
               }}
             >
               <CarouselContent>
@@ -198,8 +226,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
               className="w-full relative"
               setApi={setGalleryApi}
               opts={{
-                loop: true,
-                onChange: (index) => setGalleryIndex(index),
+                loop: true
               }}
             >
               <CarouselContent>
