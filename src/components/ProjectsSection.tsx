@@ -18,8 +18,8 @@ const projects = [
     category: "renovation",
     description: "Rénovation complète d'une villa de 180m² à Argelès-sur-Mer.",
     location: "Argelès-sur-Mer",
-    beforeImage: "/placeholder.svg",
-    afterImage: "/placeholder.svg",
+    beforeImage: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+    afterImage: "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png",
     hasBeforeAfter: true,
   },
   {
@@ -28,7 +28,7 @@ const projects = [
     category: "decoration",
     description: "Décoration sur mesure pour un appartement de caractère à Perpignan.",
     location: "Perpignan",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
     hasBeforeAfter: false,
   },
   {
@@ -37,8 +37,8 @@ const projects = [
     category: "turnkey",
     description: "Projet clé en main pour une maison de campagne de 150m² dans les Pyrénées-Orientales.",
     location: "Céret",
-    beforeImage: "/placeholder.svg",
-    afterImage: "/placeholder.svg",
+    beforeImage: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+    afterImage: "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png",
     hasBeforeAfter: true,
   },
   {
@@ -47,7 +47,7 @@ const projects = [
     category: "renovation",
     description: "Transformation d'un ancien entrepôt en loft moderne et fonctionnel.",
     location: "Perpignan",
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
     hasBeforeAfter: false,
   }
 ];
