@@ -18,8 +18,8 @@ const projects = [
     category: "renovation",
     description: "Rénovation complète d'une villa de 180m² à Argelès-sur-Mer.",
     location: "Argelès-sur-Mer",
-    beforeImage: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
-    afterImage: "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png",
+    beforeImage: "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+    afterImage: "/lovable-uploads/0e4a3a7e-df4f-440f-8443-77e8984f4f00.png",
     hasBeforeAfter: true,
   },
   {
