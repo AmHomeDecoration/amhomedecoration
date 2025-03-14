@@ -27,4 +27,18 @@ const App = () => (
   </QueryClientProvider>
 );
 
+import React from 'react';
+import UserMenu from './components/UserMenu';
+import ProjectsSection from './components/ProjectsSection';
+
+const App: React.FC = () => {
+  return (
+    <div>
+      <UserMenu />
+      <ProjectsSection />
+      {/* Ajoutez d'autres sections ou composants ici */}
+    </div>
+  );
+};
+
 export default App;
