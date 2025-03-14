@@ -1,3 +1,4 @@
+
 export interface Project {
   id: number;
   title: string;
@@ -41,6 +42,10 @@ export const projectsData: Project[] = [
       {
         before: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
         after: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg"
+      },
+      {
+        before: "/lovable-uploads/8c3d50c4-1ff5-4a3e-b708-282bbe766927.png",
+        after: "/lovable-uploads/e306d00a-1f2a-44f2-be3c-c713b0947533.png"
       }
     ]
   },

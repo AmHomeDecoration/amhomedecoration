@@ -1,8 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import {
   Pagination,
   PaginationContent,
@@ -17,7 +16,7 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const imagesPerPage = 4;
 
-  // Si moins de 1 image, ne rien afficher
+  // If less than 1 image, don't display anything
   if (!images || images.length < 1) return null;
 
   // Calculate pagination
