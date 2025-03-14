@@ -19,24 +19,53 @@ const ProjectPagination: React.FC<ProjectPaginationProps> = ({
   if (totalPages <= 1) return null;
   
   return (
-    <div className="flex justify-center items-center mt-8 gap-2">
+    <div className="flex justify-center items-center mt-8 gap-4">
       <Button 
         variant="outline" 
-        size="icon" 
+        size="sm" 
         onClick={onPrevPage} 
         disabled={currentPage === 1}
+        className="flex items-center gap-1"
       >
         <ChevronLeft size={16} />
+        Previous
       </Button>
-      <span className="text-sm text-muted-foreground">
-        Page {currentPage} sur {totalPages}
-      </span>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <Button
+          key={page}
+          variant={currentPage === page ? "default" : "outline"}
+          size="sm"
+          onClick={() => {
+            if (page !== currentPage) {
+              // Calculate how many pages to move
+              const diff = page - currentPage;
+              if (diff > 0) {
+                // Move forward diff times
+                for (let i = 0; i < diff; i++) {
+                  onNextPage();
+                }
+              } else {
+                // Move backward |diff| times
+                for (let i = 0; i < Math.abs(diff); i++) {
+                  onPrevPage();
+                }
+              }
+            }
+          }}
+        >
+          {page}
+        </Button>
+      ))}
+
       <Button 
         variant="outline" 
-        size="icon" 
+        size="sm" 
         onClick={onNextPage} 
         disabled={currentPage === totalPages}
+        className="flex items-center gap-1"
       >
+        Next
         <ChevronRight size={16} />
       </Button>
     </div>
