@@ -3,6 +3,14 @@ import React, { useState } from 'react';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 const projectCategories = [
   { id: 'all', label: 'Tous' },
@@ -62,12 +70,34 @@ const projects = [
   }
 ];
 
+const PROJECTS_PER_PAGE = 4;
+
 const ProjectsSection = () => {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredProjects = activeCategory === 'all'
     ? projects
     : projects.filter(project => project.category === activeCategory);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
+  const indexOfLastProject = currentPage * PROJECTS_PER_PAGE;
+  const indexOfFirstProject = indexOfLastProject - PROJECTS_PER_PAGE;
+  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+
+  // Reset to page 1 when changing categories
+  const handleCategoryChange = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setCurrentPage(1);
+  };
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of projects section
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <section id="projects" className="section-padding">
@@ -89,7 +119,7 @@ const ProjectsSection = () => {
                 <TabsTrigger 
                   key={category.id}
                   value={category.id}
-                  onClick={() => setActiveCategory(category.id)}
+                  onClick={() => handleCategoryChange(category.id)}
                   className="data-[state=active]:bg-design-taupe data-[state=active]:text-white"
                 >
                   {category.label}
@@ -100,7 +130,7 @@ const ProjectsSection = () => {
 
           <TabsContent value={activeCategory} className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredProjects.map(project => (
+              {currentProjects.map(project => (
                 <div 
                   key={project.id} 
                   className="bg-white rounded-lg overflow-hidden shadow-lg hover-lift"
@@ -134,6 +164,43 @@ const ProjectsSection = () => {
                 </div>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination className="mt-8">
+                <PaginationContent>
+                  {currentPage > 1 && (
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        className="cursor-pointer"
+                      />
+                    </PaginationItem>
+                  )}
+                  
+                  {Array.from({ length: totalPages }).map((_, index) => (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        isActive={currentPage === index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className="cursor-pointer"
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  {currentPage < totalPages && (
+                    <PaginationItem>
+                      <PaginationNext 
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className="cursor-pointer" 
+                      />
+                    </PaginationItem>
+                  )}
+                </PaginationContent>
+              </Pagination>
+            )}
           </TabsContent>
         </Tabs>
 
