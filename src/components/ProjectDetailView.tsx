@@ -1,16 +1,10 @@
 
-import React, { useState } from 'react';
-import { ArrowLeft, Share2, X } from 'lucide-react';
+import React from 'react';
+import { ArrowLeft, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import GallerySection from './GallerySection';
 
 export interface ProjectDetail {
   id: number;
@@ -34,20 +28,10 @@ interface ProjectDetailViewProps {
 }
 
 const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose }) => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  
   // Default values for storytelling if not provided
   const challenge = project.challenge || "Le client souhaitait moderniser son espace tout en préservant le caractère authentique du lieu. L'espace était cloisonné, manquait de lumière naturelle et nécessitait une réorganisation complète pour répondre aux besoins actuels.";
   const solutions = project.solutions || "Nous avons opté pour un agencement ouvert en supprimant certaines cloisons non porteuses. Les matériaux naturels (bois, pierre) ont été préservés et mis en valeur. L'éclairage a été entièrement repensé avec un mélange de sources directes et indirectes pour créer une ambiance chaleureuse.";
   const results = project.results || "Le résultat est un espace à la fois contemporain et chaleureux, où la lumière circule librement. Le client bénéficie désormais d'un lieu de vie fluide, fonctionnel et esthétique qui correspond parfaitement à son mode de vie et à ses attentes.";
-
-  const handleOpenImage = (image: string) => {
-    setSelectedImage(image);
-  };
-
-  const handleCloseImage = () => {
-    setSelectedImage(null);
-  };
 
   // Default gallery images if none provided
   const galleryImages = project.gallery && project.gallery.length > 0 
@@ -111,26 +95,9 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           )}
         </div>
 
-        {/* Image Gallery */}
+        {/* Gallery Section - Using our new component */}
         {galleryImages.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Galerie du projet</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {galleryImages.map((image, index) => (
-                <div 
-                  key={index} 
-                  className="aspect-square rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer"
-                  onClick={() => handleOpenImage(image)}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${project.title} - photo ${index + 1}`}
-                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <GallerySection images={galleryImages} />
         )}
 
         {/* Storytelling sections */}
@@ -174,31 +141,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </div>
         </div>
       </div>
-
-      {/* Image Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
-          onClick={handleCloseImage}
-        >
-          <div className="relative max-w-4xl w-full">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="absolute top-2 right-2 bg-white/20 hover:bg-white/40 z-10 rounded-full"
-              onClick={handleCloseImage}
-            >
-              <X className="h-6 w-6 text-white" />
-            </Button>
-            <img 
-              src={selectedImage} 
-              alt="Vue agrandie" 
-              className="max-h-[85vh] w-full object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
