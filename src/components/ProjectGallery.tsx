@@ -49,6 +49,10 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
     setSelectedImage(null);
   };
 
+  const goToSlide = (index: number) => {
+    api?.scrollTo(index);
+  };
+
   return (
     <div className="my-16">
       <h3 className="text-3xl font-serif mb-6 text-center">DÉTAILS DU PROJET</h3>
@@ -92,51 +96,75 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
             </div>
           </>
         )}
-        
-        {/* Pagination numérique style */}
-        {images.length > 1 && (
-          <div className="mt-8">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    href="#" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      api?.scrollPrev();
-                    }} 
-                  />
-                </PaginationItem>
-                
-                {images.map((_, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink 
-                      href="#" 
-                      isActive={current === index}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        api?.scrollTo(index);
-                      }}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                
-                <PaginationItem>
-                  <PaginationNext 
-                    href="#" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      api?.scrollNext();
-                    }} 
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
       </Carousel>
+      
+      {/* Thumbnails below the carousel */}
+      {images.length > 1 && (
+        <div className="mt-6 overflow-x-auto pb-2">
+          <div className="flex gap-2 justify-center">
+            {images.map((img, index) => (
+              <div 
+                key={index}
+                className={cn(
+                  "h-16 w-24 overflow-hidden rounded cursor-pointer transition-opacity border-2",
+                  current === index ? "border-design-charcoal opacity-100" : "border-transparent opacity-70 hover:opacity-100"
+                )}
+                onClick={() => goToSlide(index)}
+              >
+                <img 
+                  src={img} 
+                  alt={`Miniature ${index + 1}`} 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Pagination numérique style */}
+      {images.length > 1 && (
+        <div className="mt-8">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    api?.scrollPrev();
+                  }} 
+                />
+              </PaginationItem>
+              
+              {images.map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink 
+                    href="#" 
+                    isActive={current === index}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      api?.scrollTo(index);
+                    }}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    api?.scrollNext();
+                  }} 
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
       
       {/* Modal for enlarged image */}
       {selectedImage && (
