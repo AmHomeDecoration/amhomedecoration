@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,10 +8,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Prestations from "./pages/Prestations";
 import NotFound from "./pages/NotFound";
+import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App: React.FC = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -26,19 +28,5 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
-
-import React from 'react';
-import UserMenu from './components/UserMenu';
-import ProjectsSection from './components/ProjectsSection';
-
-const App: React.FC = () => {
-  return (
-    <div>
-      <UserMenu />
-      <ProjectsSection />
-      {/* Ajoutez d'autres sections ou composants ici */}
-    </div>
-  );
-};
 
 export default App;
