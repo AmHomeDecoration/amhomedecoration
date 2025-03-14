@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import ProjectDetailView, { ProjectDetail } from './ProjectDetailView';
 import GallerySection from './GallerySection';
 
-// Sample images for the gallery
+// Sample images for the gallery (keeping these declarations for possible future use)
 const sampleGalleryImages = [
   "/images/projet1-1.jpg",
   "/images/projet1-2.jpg",
@@ -14,7 +14,7 @@ const sampleGalleryImages = [
   "/images/projet1-5.jpg",
 ];
 
-// Additional simple gallery images
+// Additional simple gallery images (keeping these declarations for possible future use)
 const simpleGalleryImages = [
   "/images/projet1-1.jpg",
   "/images/projet1-2.jpg",
@@ -212,26 +212,6 @@ const ProjectsSection: React.FC = () => {
           </p>
         </div>
         
-        {/* Sample Gallery Section - Just after the heading */}
-        <div className="mb-12">
-          <GallerySection images={sampleGalleryImages} title="Galerie d'exemples" />
-        </div>
-        
-        {/* Nouvelle galerie de photos simple */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Inspirations</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-            {simpleGalleryImages.map((img, index) => (
-              <img 
-                key={index} 
-                src={img} 
-                alt={`Projet ${index + 1}`} 
-                className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
-              />
-            ))}
-          </div>
-        </div>
-        
         <Tabs defaultValue="all" className="mb-12">
           <TabsList className="flex justify-center mb-8 flex-wrap gap-2">
             <TabsTrigger 
@@ -305,7 +285,6 @@ const ProjectsSection: React.FC = () => {
               ))}
             </div>
             
-            {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center mt-8 gap-2">
                 <Button 
@@ -333,7 +312,6 @@ const ProjectsSection: React.FC = () => {
         </Tabs>
       </div>
 
-      {/* Project Detail View */}
       {selectedProject && (
         <ProjectDetailView project={selectedProject} onClose={closeProjectDetail} />
       )}
