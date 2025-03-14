@@ -1,6 +1,15 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+
 const AboutSection = () => {
+  const navigate = useNavigate();
+  
+  const handleLearnMore = () => {
+    navigate('/prestations');
+  };
+
   return <section id="about" className="section-padding bg-design-beige">
       <div className="container mx-auto container-padding">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -28,7 +37,10 @@ const AboutSection = () => {
                 <p className="text-sm text-muted-foreground">Suivi de chantier et coordination</p>
               </div>
             </div>
-            <Button className="bg-design-charcoal hover:bg-design-black">
+            <Button 
+              className="bg-design-charcoal hover:bg-design-black"
+              onClick={handleLearnMore}
+            >
               En savoir plus
             </Button>
           </div>
