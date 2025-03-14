@@ -18,7 +18,7 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
 
   return (
     <div className="mt-8">
-      <h3 className="text-xl font-serif mb-4">Détails du projet</h3>
+      <h3 className="text-xl font-serif mb-4">Galerie du projet</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {images.map((img, index) => (
           <div 

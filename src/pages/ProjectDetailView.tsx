@@ -29,12 +29,10 @@ interface ProjectDetailViewProps {
 }
 
 const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose }) => {
-  // Default values for storytelling if not provided
   const challenge = project.challenge || "Le client souhaitait moderniser son espace tout en préservant le caractère authentique du lieu. L'espace était cloisonné, manquait de lumière naturelle et nécessitait une réorganisation complète pour répondre aux besoins actuels.";
   const solutions = project.solutions || "Nous avons opté pour un agencement ouvert en supprimant certaines cloisons non porteuses. Les matériaux naturels (bois, pierre) ont été préservés et mis en valeur. L'éclairage a été entièrement repensé avec un mélange de sources directes et indirectes pour créer une ambiance chaleureuse.";
   const results = project.results || "Le résultat est un espace à la fois contemporain et chaleureux, où la lumière circule librement. Le client bénéficie désormais d'un lieu de vie fluide, fonctionnel et esthétique qui correspond parfaitement à son mode de vie et à ses attentes.";
 
-  // Default gallery images if none provided
   const galleryImages = project.gallery && project.gallery.length > 0 
     ? project.gallery 
     : project.afterImage 
@@ -43,9 +41,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
         ? [project.image]
         : [];
 
-  // Create before/after pairs for gallery
-  // If project has beforeAfterGallery property, use it
-  // Otherwise, if project has both beforeImage and afterImage, create a pair
   const beforeAfterPairs = project.beforeAfterGallery || 
     (project.beforeImage && project.afterImage 
       ? [{ before: project.beforeImage, after: project.afterImage }] 
@@ -56,7 +51,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
   return (
     <div className="fixed inset-0 bg-background z-50 overflow-y-auto">
       <div className="container mx-auto container-padding py-8">
-        {/* Header with navigation */}
         <div className="flex justify-between items-center mb-8">
           <Button 
             variant="ghost" 
@@ -72,7 +66,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </Button>
         </div>
 
-        {/* Project title */}
         <h1 className="text-3xl md:text-4xl font-serif mb-2 text-design-charcoal">{project.title}</h1>
         <div className="flex items-center gap-2 mb-8">
           <span className="bg-muted px-3 py-1 rounded-full text-sm text-muted-foreground">
@@ -86,7 +79,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </span>
         </div>
 
-        {/* Before/After or main image */}
         <div className="mb-10 rounded-xl overflow-hidden shadow-lg">
           {project.hasBeforeAfter && project.beforeImage && project.afterImage ? (
             <div className="h-[500px]">
@@ -106,7 +98,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           )}
         </div>
 
-        {/* Before/After Gallery */}
         {hasBeforeAfterGallery && (
           <div className="mb-12">
             <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Avant / Après</h2>
@@ -142,12 +133,10 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </div>
         )}
 
-        {/* Standard Gallery */}
         {galleryImages.length > 0 && (
           <ProjectGallery images={galleryImages} />
         )}
 
-        {/* Storytelling sections */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <Card className="bg-white">
             <CardContent className="pt-6">
@@ -171,7 +160,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </Card>
         </div>
 
-        {/* Call to action */}
         <div className="text-center bg-muted p-8 rounded-xl">
           <h3 className="text-2xl font-serif mb-4 text-design-charcoal">Vous avez un projet similaire ?</h3>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
