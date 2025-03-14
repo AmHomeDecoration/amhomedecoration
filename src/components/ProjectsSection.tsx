@@ -1,267 +1,304 @@
 
-import React, { useState } from 'react';
-import BeforeAfterSlider from './BeforeAfterSlider';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
-import ProjectDetailView from './ProjectDetailView';
+import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import ProjectDetailView, { ProjectDetail } from './ProjectDetailView';
 
-const projectCategories = [
-  { id: 'all', label: 'Tous' },
-  { id: 'renovation', label: 'Rénovation' },
-  { id: 'decoration', label: 'Décoration' },
-  { id: 'turnkey', label: 'Clé en main' },
-  { id: 'canohes', label: 'Canohès' },
-];
+interface Project {
+  id: number;
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  location: string;
+  beforeImage?: string;
+  afterImage?: string;
+  hasBeforeAfter: boolean;
+  challenge?: string;
+  solutions?: string;
+  results?: string;
+  gallery?: string[];
+}
 
-const projects = [
-  {
-    id: 1,
-    title: "Villa Méditerranéenne",
-    category: "renovation",
-    description: "Rénovation complète d'une villa de 180m² à Argelès-sur-Mer.",
-    location: "Argelès-sur-Mer",
-    beforeImage: "/projets/villa-mediterraneenne/avant.jpg",
-    afterImage: "/projets/villa-mediterraneenne/apres.png",
-    hasBeforeAfter: true,
-    challenge: "Cette villa méditerranéenne souffrait d'un aménagement démodé et cloisonné, empêchant la lumière naturelle de circuler. Les espaces manquaient de caractère et ne correspondaient plus au mode de vie des propriétaires.",
-    solutions: "Nous avons réorganisé l'espace en créant une grande pièce de vie ouverte. Les matériaux traditionnels ont été conservés et mis en valeur, complétés par des touches contemporaines. Un nouveau système d'éclairage naturel et artificiel a été conçu pour maximiser la luminosité.",
-    results: "La villa rayonne désormais d'une nouvelle élégance méditerranéenne. L'espace de vie fluide et lumineux offre des vues imprenables sur le jardin. Les propriétaires profitent pleinement d'un intérieur à la fois authentique et moderne, parfaitement adapté à leur quotidien.",
-    gallery: [
-      "/projets/villa-mediterraneenne/galerie-1.jpg",
-      "/projets/villa-mediterraneenne/galerie-2.jpg",
-      "/projets/villa-mediterraneenne/galerie-3.jpg",
-    ]
-  },
-  {
-    id: 2,
-    title: "Appartement Haussmannien",
-    category: "decoration",
-    description: "Décoration sur mesure pour un appartement de caractère à Perpignan.",
-    location: "Perpignan",
-    image: "/projets/appartement-haussmannien/principal.jpg",
-    hasBeforeAfter: false,
-    challenge: "Cet appartement haussmannien possédait un fort potentiel architectural mais manquait d'une identité stylistique cohérente. Le client souhaitait préserver les éléments d'époque tout en apportant une touche contemporaine.",
-    solutions: "Une palette de couleurs douces et élégantes a été sélectionnée pour mettre en valeur les moulures et parquets d'origine. Le mobilier sur mesure allie fonctionnalité moderne et esthétique classique. Les textiles et accessoires ont été choisis pour ajouter chaleur et personnalité.",
-    results: "L'appartement incarne désormais un équilibre parfait entre héritage architectural et confort contemporain. Chaque pièce raconte une histoire cohérente, créant une atmosphère à la fois sophistiquée et accueillante qui correspond parfaitement aux aspirations du client."
-  },
-  {
-    id: 3,
-    title: "Maison de Campagne",
-    category: "turnkey",
-    description: "Projet clé en main pour une maison de campagne de 150m² dans les Pyrénées-Orientales.",
-    location: "Céret",
-    beforeImage: "/projets/maison-campagne/avant.jpg",
-    afterImage: "/projets/maison-campagne/apres.png",
-    hasBeforeAfter: true,
-    challenge: "Cette maison de campagne traditionnelle nécessitait une rénovation complète. L'agencement était inefficace, les installations techniques obsolètes, et l'atmosphère générale sombre et datée.",
-    solutions: "Une approche clé en main a permis de repenser entièrement l'espace. Les travaux ont inclus la refonte des circuits électriques et de plomberie, la création d'une cuisine ouverte, et l'optimisation de l'isolation thermique et phonique. Les matériaux locaux ont été privilégiés pour respecter l'authenticité du lieu.",
-    results: "La transformation a donné naissance à une maison de campagne alliant charme rustique et confort moderne. L'efficacité énergétique a été considérablement améliorée, réduisant les coûts de chauffage. Les propriétaires bénéficient désormais d'un havre de paix parfaitement adapté à leurs besoins, tant pour y vivre au quotidien que pour y recevoir famille et amis."
-  },
-  {
-    id: 4,
-    title: "Loft Industriel",
-    category: "renovation",
-    description: "Transformation d'un ancien entrepôt en loft moderne et fonctionnel.",
-    location: "Perpignan",
-    image: "/projets/loft-industriel/principal.jpg",
-    hasBeforeAfter: false,
-    challenge: "Cet ancien entrepôt présentait un défi de taille : transformer un espace industriel brut en habitat confortable tout en préservant son caractère authentique. Les grandes hauteurs sous plafond et l'absence de cloisons nécessitaient une approche créative.",
-    solutions: "Nous avons conçu un aménagement qui respecte l'esprit industriel du lieu tout en créant des zones distinctes. Des matériaux bruts comme l'acier, le béton ciré et le bois ont été utilisés. Des mezzanines ont été créées pour exploiter la hauteur, et un système de cloisons mobiles permet de moduler l'espace selon les besoins.",
-    results: "Le loft offre désormais un cadre de vie exceptionnellement spacieux et flexible. L'âme industrielle du bâtiment a été préservée tout en offrant un confort optimal. Le propriétaire dispose d'un espace unique qui lui permet d'adapter son intérieur selon ses activités et qui impressionne par son caractère architectural distinctif."
-  },
-  {
-    id: 5,
-    title: "Maison Contemporaine",
-    category: "canohes",
-    description: "Aménagement intérieur d'une maison moderne à Canohès.",
-    location: "Canohès",
-    image: "/projets/canohes/maison-contemporaine.jpg",
-    hasBeforeAfter: false,
-    challenge: "Cette construction récente à Canohès présentait des espaces bien conçus architecturalement mais manquait de caractère et de chaleur. Les propriétaires souhaitaient un intérieur à la fois contemporain et accueillant, avec une attention particulière portée à la fonctionnalité pour leur famille.",
-    solutions: "Une approche basée sur la simplicité et l'élégance a guidé nos choix. Une palette de couleurs neutres ponctuée de touches colorées apporte personnalité et dynamisme. Le mobilier a été sélectionné pour son design contemporain mais confortable, et des solutions de rangement intégrées maximisent l'espace disponible.",
-    results: "La maison est désormais un exemple parfait d'équilibre entre esthétique contemporaine et confort familial. Chaque espace répond précisément aux besoins quotidiens des propriétaires tout en offrant une belle harmonie visuelle. L'atmosphère chaleureuse et sereine qu'ils recherchaient a été créée, faisant de leur maison un véritable lieu de vie et de partage."
-  }
-];
-
-const PROJECTS_PER_PAGE = 4;
-
-const ProjectsSection = () => {
+const ProjectsSection: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedProject, setSelectedProject] = useState<ProjectDetail | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const projectsPerPage = 4;
 
-  const filteredProjects = activeCategory === 'all'
-    ? projects
-    : projects.filter(project => project.category === activeCategory);
+  useEffect(() => {
+    // Sample projects data
+    const projectsData: Project[] = [
+      {
+        id: 1,
+        title: "Rénovation appartement haussmannien",
+        category: "renovation",
+        image: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+        description: "Transformation complète d'un appartement ancien en espace contemporain",
+        location: "Perpignan",
+        beforeImage: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+        afterImage: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
+        hasBeforeAfter: true,
+        challenge: "Cet appartement haussmannien avait conservé son charme d'origine mais souffrait d'un agencement obsolète, avec des pièces cloisonnées et sombres qui ne correspondaient plus aux standards de vie actuels.",
+        solutions: "Nous avons préservé les éléments architecturaux d'époque (moulures, parquet) tout en créant une circulation plus fluide entre les espaces. La cuisine a été ouverte sur le séjour et les matériaux nobles ont été mis en valeur par un éclairage repensé.",
+        results: "L'appartement a retrouvé son élégance d'antan tout en offrant le confort moderne. Les propriétaires bénéficient désormais d'un espace lumineux qui respecte l'âme du lieu tout en répondant à leurs besoins contemporains.",
+      },
+      {
+        id: 2,
+        title: "Décoration villa méditerranéenne",
+        category: "decoration",
+        image: "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+        description: "Ambiance bord de mer pour cette villa familiale",
+        location: "Argelès-sur-Mer",
+        hasBeforeAfter: false,
+        challenge: "Les propriétaires souhaitaient insuffler une atmosphère méditerranéenne contemporaine à leur villa, en évitant les clichés trop typiques du style bord de mer.",
+        solutions: "Nous avons opté pour une palette de couleurs douces inspirées de la mer et du sable, ponctuée de bleus plus profonds. Des matériaux naturels comme le lin, le bois flotté et la pierre locale ont été intégrés à une décoration épurée mais chaleureuse.",
+        results: "La villa offre désormais une ambiance apaisante qui évoque subtilement l'environnement méditerranéen. L'espace est à la fois élégant pour recevoir et confortable pour la vie quotidienne de cette famille avec enfants.",
+        gallery: [
+          "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+          "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
+        ]
+      },
+      {
+        id: 3,
+        title: "Rénovation cuisine contemporaine",
+        category: "renovation",
+        image: "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png",
+        description: "Une cuisine fonctionnelle et design pour cette maison de village",
+        location: "Collioure",
+        beforeImage: "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+        afterImage: "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png",
+        hasBeforeAfter: true,
+        challenge: "La cuisine existante, vétuste et peu pratique, ne correspondait plus aux besoins des propriétaires qui aiment recevoir et cuisiner. L'espace était mal optimisé et manquait cruellement de rangements.",
+        solutions: "Nous avons conçu un agencement sur-mesure qui maximise chaque centimètre carré. Les matériaux (plan de travail en quartz, façades laquées) ont été choisis pour leur durabilité et leur facilité d'entretien, tout en apportant une touche contemporaine.",
+        results: "La nouvelle cuisine combine esthétique et praticité avec de nombreux rangements, un îlot central qui favorise la convivialité et des équipements haut de gamme qui facilitent le quotidien des propriétaires.",
+      },
+      {
+        id: 4,
+        title: "Aménagement bureau à domicile",
+        category: "decoration",
+        image: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
+        description: "Création d'un espace de travail inspirant et fonctionnel",
+        location: "Canet-en-Roussillon",
+        hasBeforeAfter: false,
+        challenge: "Suite à la généralisation du télétravail, ce client avait besoin d'un véritable bureau à domicile, à la fois professionnel et en harmonie avec le reste de son intérieur.",
+        solutions: "Nous avons transformé une chambre d'amis peu utilisée en bureau fonctionnel. Un mobilier sur-mesure a permis d'optimiser l'espace tout en intégrant de nombreux rangements. L'acoustique et l'éclairage ont fait l'objet d'une attention particulière.",
+        results: "Le client dispose maintenant d'un espace de travail professionnel qui favorise sa concentration et sa productivité, tout en restant cohérent avec l'esthétique générale de sa maison.",
+      },
+      {
+        id: 5,
+        title: "Réaménagement loft industriel",
+        category: "renovation",
+        image: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+        description: "Transformation d'un ancien atelier en espace de vie contemporain",
+        location: "Perpignan",
+        hasBeforeAfter: false,
+        challenge: "Cet ancien atelier offrait un beau volume mais présentait des défis en termes d'isolation, de distribution des espaces et d'intégration des éléments techniques.",
+        solutions: "Tout en préservant l'esprit industriel du lieu (poutres apparentes, hauteur sous plafond), nous avons créé des zones distinctes sans cloisonner complètement. Les matériaux bruts ont été conservés et mis en valeur par des éléments plus contemporains.",
+        results: "Le loft offre désormais un cadre de vie unique qui respecte l'histoire du bâtiment tout en offrant un confort optimal. Les différents espaces de vie cohabitent harmonieusement dans ce volume ouvert.",
+      },
+      {
+        id: 6,
+        title: "Décoration appartement de vacances",
+        category: "decoration",
+        image: "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+        description: "Ambiance décontractée pour cet appartement face à la mer",
+        location: "Argelès-sur-Mer",
+        hasBeforeAfter: false,
+        challenge: "Cet appartement de vacances devait être à la fois pratique, facile d'entretien et offrir une atmosphère relaxante qui marque une vraie rupture avec le quotidien des propriétaires.",
+        solutions: "Nous avons privilégié des matériaux résistants et des textiles lavables, tout en créant une décoration inspirée par la mer toute proche. Les couleurs apaisantes et les textures naturelles invitent à la détente.",
+        results: "L'appartement est devenu un véritable havre de paix où les propriétaires et leurs invités se sentent immédiatement en vacances. La décoration évoque subtilement l'environnement maritime sans tomber dans les clichés.",
+      },
+      {
+        id: 7,
+        title: "Projet de rénovation globale",
+        category: "turnkey",
+        image: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
+        description: "Refonte complète d'une villa des années 80",
+        location: "Canohès",
+        beforeImage: "/lovable-uploads/66e79af6-827f-4f01-89ca-cf6e04a3c6a5.jpg",
+        afterImage: "/lovable-uploads/2a139136-b1b6-4c3c-af62-232e41c065b0.jpg",
+        hasBeforeAfter: true,
+        challenge: "Cette villa n'avait jamais été rénovée depuis sa construction dans les années 80. Outre une distribution obsolète, elle présentait des problèmes d'isolation et des installations techniques vétustes.",
+        solutions: "Nous avons coordonné un projet de rénovation globale incluant la refonte complète des espaces, la rénovation énergétique et la modernisation de tous les équipements, tout en respectant le budget défini.",
+        results: "Les propriétaires bénéficient désormais d'une maison entièrement repensée qui répond aux standards actuels de confort et d'efficacité énergétique, tout en reflétant leur style de vie et leurs goûts personnels.",
+      },
+      {
+        id: 8,
+        title: "Rénovation d'une maison de village",
+        category: "canohes",
+        image: "/lovable-uploads/2d3996b6-132a-44ed-9183-8125e84a94d9.jpg",
+        description: "Modernisation respectueuse d'une demeure traditionnelle",
+        location: "Canohès",
+        hasBeforeAfter: false,
+        challenge: "Cette maison de village ancienne présentait des contraintes structurelles importantes et nécessitait une mise aux normes complète, tout en préservant son caractère authentique.",
+        solutions: "Nous avons travaillé avec des artisans spécialisés dans la rénovation du bâti ancien pour respecter l'âme de cette maison, tout en y intégrant discrètement les éléments de confort modernes.",
+        results: "La maison a retrouvé son charme d'antan tout en offrant un niveau de confort contemporain. Les matériaux traditionnels ont été préservés ou remplacés à l'identique, créant une continuité historique tout en répondant aux attentes actuelles.",
+      },
+    ];
+
+    setProjects(projectsData);
+    setFilteredProjects(projectsData);
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...projects];
+    
+    if (activeCategory !== 'all') {
+      filtered = projects.filter(project => project.category === activeCategory);
+    }
+    
+    setFilteredProjects(filtered);
+    setCurrentPage(1); // Reset to first page when changing category
+  }, [activeCategory, projects]);
+
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+  };
+
+  const handleViewProject = (project: Project) => {
+    setSelectedProject(project as ProjectDetail);
+  };
+
+  const closeProjectDetail = () => {
+    setSelectedProject(null);
+  };
 
   // Calculate pagination
-  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
-  const indexOfLastProject = currentPage * PROJECTS_PER_PAGE;
-  const indexOfFirstProject = indexOfLastProject - PROJECTS_PER_PAGE;
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
 
-  // Reset to page 1 when changing categories
-  const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    setCurrentPage(1);
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // Scroll to top of projects section
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
-
-  // Handle project selection
-  const handleProjectClick = (projectId: number) => {
-    setSelectedProject(projectId);
-    // Prevent scrolling when the detail view is open
-    document.body.style.overflow = 'hidden';
-  };
-
-  // Handle closing project detail view
-  const handleCloseProjectDetail = () => {
-    setSelectedProject(null);
-    // Restore scrolling
-    document.body.style.overflow = 'auto';
-  };
-
-  // Find the selected project details
-  const selectedProjectDetails = selectedProject !== null
-    ? projects.find(project => project.id === selectedProject)
-    : null;
 
   return (
-    <section id="projects" className="section-padding">
+    <section id="projects" className="bg-muted section-padding">
       <div className="container mx-auto container-padding">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-serif mb-4 text-design-charcoal">
-            Mes réalisations
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-serif mb-4 text-design-charcoal">Mes réalisations</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Découvrez quelques-uns de mes projets récents d'architecture d'intérieur et de décoration
-            réalisés à Argelès-sur-Mer et dans toutes les Pyrénées-Orientales.
+            Découvrez une sélection de mes projets récents de décoration et rénovation d'intérieur dans les Pyrénées-Orientales.
           </p>
         </div>
-
+        
         <Tabs defaultValue="all" className="mb-12">
-          <div className="flex justify-center">
-            <TabsList className="bg-muted">
-              {projectCategories.map(category => (
-                <TabsTrigger 
-                  key={category.id}
-                  value={category.id}
-                  onClick={() => handleCategoryChange(category.id)}
-                  className="data-[state=active]:bg-design-taupe data-[state=active]:text-white"
-                >
-                  {category.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          <TabsList className="flex justify-center mb-8 flex-wrap gap-2">
+            <TabsTrigger 
+              value="all" 
+              onClick={() => handleCategoryChange('all')}
+              className="data-[state=active]:bg-design-charcoal data-[state=active]:text-white"
+            >
+              Tous les projets
+            </TabsTrigger>
+            <TabsTrigger 
+              value="renovation" 
+              onClick={() => handleCategoryChange('renovation')}
+              className="data-[state=active]:bg-design-charcoal data-[state=active]:text-white"
+            >
+              Rénovation
+            </TabsTrigger>
+            <TabsTrigger 
+              value="decoration" 
+              onClick={() => handleCategoryChange('decoration')}
+              className="data-[state=active]:bg-design-charcoal data-[state=active]:text-white"
+            >
+              Décoration
+            </TabsTrigger>
+            <TabsTrigger 
+              value="turnkey" 
+              onClick={() => handleCategoryChange('turnkey')}
+              className="data-[state=active]:bg-design-charcoal data-[state=active]:text-white"
+            >
+              Clé en main
+            </TabsTrigger>
+            <TabsTrigger 
+              value="canohes" 
+              onClick={() => handleCategoryChange('canohes')}
+              className="data-[state=active]:bg-design-charcoal data-[state=active]:text-white"
+            >
+              Canohès
+            </TabsTrigger>
+          </TabsList>
 
-          <TabsContent value={activeCategory} className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {currentProjects.map(project => (
+          <TabsContent value={activeCategory} className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {currentProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className="bg-white rounded-lg overflow-hidden shadow-lg hover-lift"
+                  className="bg-white rounded-lg overflow-hidden shadow-md hover-lift"
                 >
-                  <div className="h-80">
-                    {project.hasBeforeAfter ? (
-                      <BeforeAfterSlider
-                        beforeImage={project.beforeImage}
-                        afterImage={project.afterImage}
-                      />
-                    ) : (
-                      <img 
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+                  <div className="relative h-64">
+                    <img 
+                      src={project.image} 
+                      alt={project.title} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-serif text-design-charcoal">{project.title}</h3>
-                      <span className="text-xs bg-muted px-2 py-1 rounded-full text-muted-foreground">
-                        {project.location}
-                      </span>
+                    <h3 className="text-xl font-serif mb-2 line-clamp-2">{project.title}</h3>
+                    <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{project.location}</span>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex items-center gap-1 border-design-gold text-design-charcoal" 
+                        onClick={() => handleViewProject(project)}
+                      >
+                        <Eye size={14} />
+                        Voir le projet
+                      </Button>
                     </div>
-                    <p className="text-muted-foreground mb-4">{project.description}</p>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => handleProjectClick(project.id)}
-                    >
-                      Voir le projet
-                    </Button>
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* Pagination */}
+            
+            {/* Pagination Controls */}
             {totalPages > 1 && (
-              <Pagination className="mt-8">
-                <PaginationContent>
-                  {currentPage > 1 && (
-                    <PaginationItem>
-                      <PaginationPrevious 
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        className="cursor-pointer"
-                      />
-                    </PaginationItem>
-                  )}
-                  
-                  {Array.from({ length: totalPages }).map((_, index) => (
-                    <PaginationItem key={index}>
-                      <PaginationLink
-                        isActive={currentPage === index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        className="cursor-pointer"
-                      >
-                        {index + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  
-                  {currentPage < totalPages && (
-                    <PaginationItem>
-                      <PaginationNext 
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        className="cursor-pointer" 
-                      />
-                    </PaginationItem>
-                  )}
-                </PaginationContent>
-              </Pagination>
+              <div className="flex justify-center items-center mt-8 gap-2">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={prevPage} 
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft size={16} />
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} sur {totalPages}
+                </span>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={nextPage} 
+                  disabled={currentPage === totalPages}
+                >
+                  <ChevronRight size={16} />
+                </Button>
+              </div>
             )}
           </TabsContent>
         </Tabs>
-
-        <div className="text-center">
-          <Button size="lg" className="bg-design-charcoal hover:bg-design-black">
-            Voir tous les projets
-          </Button>
-        </div>
       </div>
 
       {/* Project Detail View */}
-      {selectedProjectDetails && (
-        <ProjectDetailView 
-          project={selectedProjectDetails}
-          onClose={handleCloseProjectDetail}
-        />
+      {selectedProject && (
+        <ProjectDetailView project={selectedProject} onClose={closeProjectDetail} />
       )}
     </section>
   );
