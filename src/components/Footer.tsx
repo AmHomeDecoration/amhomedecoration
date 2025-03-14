@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { Instagram, Facebook, Linkedin, ArrowUp } from 'lucide-react';
-
 const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({
@@ -9,13 +7,11 @@ const Footer = () => {
       behavior: 'smooth'
     });
   };
-
-  return (
-    <footer className="bg-design-charcoal text-white">
+  return <footer className="bg-design-charcoal text-white">
       <div className="container mx-auto container-padding py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-serif mb-4">Refined Interior Vision</h3>
+            <h3 className="text-xl font-serif mb-4">AM Home Décoration</h3>
             <p className="text-white/70 mb-4">
               Architecture d'intérieur & décoration sur mesure à Argelès-sur-Mer et dans les Pyrénées-Orientales.
             </p>
@@ -75,16 +71,11 @@ const Footer = () => {
           <p className="text-white/50 text-sm mb-4 md:mb-0">
             © {new Date().getFullYear()} Refined Interior Vision. Tous droits réservés.
           </p>
-          <button
-            onClick={scrollToTop}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
-          >
+          <button onClick={scrollToTop} className="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
             Retour en haut <ArrowUp size={16} />
           </button>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
