@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +12,14 @@ const sampleGalleryImages = [
   "/images/projet1-3.jpg",
   "/images/projet1-4.jpg",
   "/images/projet1-5.jpg",
+];
+
+// Additional simple gallery images
+const simpleGalleryImages = [
+  "/images/projet1-1.jpg",
+  "/images/projet1-2.jpg",
+  "/images/projet1-3.jpg",
+  "/images/projet1-4.jpg",
 ];
 
 interface Project {
@@ -208,6 +215,21 @@ const ProjectsSection: React.FC = () => {
         {/* Sample Gallery Section - Just after the heading */}
         <div className="mb-12">
           <GallerySection images={sampleGalleryImages} title="Galerie d'exemples" />
+        </div>
+        
+        {/* Nouvelle galerie de photos simple */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Inspirations</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+            {simpleGalleryImages.map((img, index) => (
+              <img 
+                key={index} 
+                src={img} 
+                alt={`Projet ${index + 1}`} 
+                className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300" 
+              />
+            ))}
+          </div>
         </div>
         
         <Tabs defaultValue="all" className="mb-12">
