@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ArrowLeft, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import { Card, CardContent } from '@/components/ui/card';
-import GallerySection from '@/components/GallerySection';
+import ProjectGallery from '@/components/ProjectGallery';
 import { cn } from '@/lib/utils';
 
 export interface ProjectDetail {
@@ -144,7 +144,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
 
         {/* Standard Gallery */}
         {galleryImages.length > 0 && (
-          <GallerySection images={galleryImages} title="Galerie du projet" />
+          <ProjectGallery images={galleryImages} />
         )}
 
         {/* Storytelling sections */}
