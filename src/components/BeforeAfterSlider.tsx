@@ -21,14 +21,12 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
     setIsDragging(true);
     if (onDragStart) onDragStart();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
+    // Don't call preventDefault here as it prevents the touchmove event from firing properly
     setIsDragging(true);
     if (onDragStart) onDragStart();
   };
@@ -49,7 +47,10 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   };
 
   const handleTouchMove = (e: TouchEvent) => {
-    handleMove(e.touches[0].clientX);
+    if (isDragging) {
+      e.preventDefault(); // Prevent scroll only while dragging
+      handleMove(e.touches[0].clientX);
+    }
   };
 
   const handleEnd = () => {
@@ -75,22 +76,6 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
       window.removeEventListener('mouseup', handleEnd);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleEnd);
-    };
-  }, [isDragging]);
-
-  // Handle touch events to prevent default behavior
-  useEffect(() => {
-    const preventDefaultTouch = (e: TouchEvent) => {
-      if (isDragging) {
-        e.preventDefault();
-      }
-    };
-
-    // Add passive: false to allow preventDefault() in touchmove events
-    document.addEventListener('touchmove', preventDefaultTouch, { passive: false });
-    
-    return () => {
-      document.removeEventListener('touchmove', preventDefaultTouch);
     };
   }, [isDragging]);
 
@@ -131,7 +116,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
       
       {/* Slider Handle */}
       <div 
-        className="absolute top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-grab"
+        className="absolute top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-grab active:cursor-grabbing"
         style={{ left: `${position}%`, transform: 'translate(-50%, -50%)' }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}

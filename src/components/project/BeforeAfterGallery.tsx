@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Carousel, 
   CarouselContent, 
@@ -24,6 +24,7 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
   const [beforeAfterApi, setBeforeAfterApi] = useState<any>(null);
   const [beforeAfterIndex, setBeforeAfterIndex] = useState(0);
   const [isDraggingSlider, setIsDraggingSlider] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
   
   // Limit to a maximum of 4 pairs
   const limitedPairs = beforeAfterPairs.slice(0, 4);
@@ -38,51 +39,10 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
     
     beforeAfterApi.on('select', onSelectHandler);
     
-    // Listen for slider interactions
-    const sliderElements = document.querySelectorAll('.before-after-slider');
-    
-    const handleSliderMouseDown = (e: Event) => {
-      e.stopPropagation();
-      setIsDraggingSlider(true);
-      
-      // Disable carousel dragging entirely when interacting with slider
-      if (beforeAfterApi) {
-        beforeAfterApi.clickAllowed = false;
-      }
-    };
-    
-    const handleGlobalMouseUp = () => {
-      setIsDraggingSlider(false);
-      
-      // Re-enable carousel dragging when slider interaction is done
-      if (beforeAfterApi) {
-        setTimeout(() => {
-          beforeAfterApi.clickAllowed = true;
-        }, 10);
-      }
-    };
-    
-    sliderElements.forEach(el => {
-      el.addEventListener('mousedown', handleSliderMouseDown);
-      el.addEventListener('touchstart', handleSliderMouseDown, { passive: false });
-    });
-    
-    // Add global mouse/touch up handlers
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-    window.addEventListener('touchend', handleGlobalMouseUp);
-    
     return () => {
       if (beforeAfterApi) {
         beforeAfterApi.off('select', onSelectHandler);
       }
-      
-      sliderElements.forEach(el => {
-        el.removeEventListener('mousedown', handleSliderMouseDown);
-        el.removeEventListener('touchstart', handleSliderMouseDown);
-      });
-      
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
-      window.removeEventListener('touchend', handleGlobalMouseUp);
     };
   }, [beforeAfterApi]);
 
@@ -90,9 +50,27 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
     return null;
   }
 
+  const handleSliderDragStart = () => {
+    setIsDraggingSlider(true);
+    // When slider drag starts, we want to disable carousel dragging
+    if (beforeAfterApi) {
+      beforeAfterApi.canDrag = false;
+    }
+  };
+
+  const handleSliderDragEnd = () => {
+    setIsDraggingSlider(false);
+    // Re-enable carousel dragging after a short delay to avoid accidental swipes
+    if (beforeAfterApi) {
+      setTimeout(() => {
+        beforeAfterApi.canDrag = true;
+      }, 100);
+    }
+  };
+
   const carouselOptions = {
     loop: true,
-    draggable: !isDraggingSlider // Disable dragging when slider is being used
+    draggable: !isDraggingSlider
   };
 
   return (
@@ -112,6 +90,7 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
         className="w-full relative"
         setApi={setBeforeAfterApi}
         opts={carouselOptions}
+        ref={carouselRef}
       >
         <CarouselContent>
           {limitedPairs.map((pair, index) => (
@@ -121,20 +100,8 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
                   <BeforeAfterSlider 
                     beforeImage={pair.before}
                     afterImage={pair.after}
-                    onDragStart={() => {
-                      setIsDraggingSlider(true);
-                      if (beforeAfterApi) {
-                        beforeAfterApi.clickAllowed = false;
-                      }
-                    }}
-                    onDragEnd={() => {
-                      setIsDraggingSlider(false);
-                      if (beforeAfterApi) {
-                        setTimeout(() => {
-                          beforeAfterApi.clickAllowed = true;
-                        }, 10);
-                      }
-                    }}
+                    onDragStart={handleSliderDragStart}
+                    onDragEnd={handleSliderDragEnd}
                   />
                 </div>
               </div>
