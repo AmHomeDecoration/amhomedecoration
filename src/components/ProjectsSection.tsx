@@ -9,6 +9,7 @@ const projectCategories = [
   { id: 'renovation', label: 'Rénovation' },
   { id: 'decoration', label: 'Décoration' },
   { id: 'turnkey', label: 'Clé en main' },
+  { id: 'canohes', label: 'Canohès' },
 ];
 
 const projects = [
@@ -48,6 +49,15 @@ const projects = [
     description: "Transformation d'un ancien entrepôt en loft moderne et fonctionnel.",
     location: "Perpignan",
     image: "/projets/loft-industriel/principal.jpg",
+    hasBeforeAfter: false,
+  },
+  {
+    id: 5,
+    title: "Maison Contemporaine",
+    category: "canohes",
+    description: "Aménagement intérieur d'une maison moderne à Canohès.",
+    location: "Canohès",
+    image: "/projets/canohes/maison-contemporaine.jpg",
     hasBeforeAfter: false,
   }
 ];
