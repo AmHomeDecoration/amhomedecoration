@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
-import ProjectDetailView, { ProjectDetail } from './ProjectDetailView';
+import ProjectDetailView, { ProjectDetail } from '@/pages/ProjectDetailView';
 import GallerySection from './GallerySection';
 
 // Sample images for the gallery (keeping these declarations for possible future use)
