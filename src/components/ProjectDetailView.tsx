@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { ArrowLeft, Share2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Share2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import { Card, CardContent } from '@/components/ui/card';
@@ -34,10 +34,29 @@ interface ProjectDetailViewProps {
 }
 
 const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose }) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  
   // Default values for storytelling if not provided
   const challenge = project.challenge || "Le client souhaitait moderniser son espace tout en préservant le caractère authentique du lieu. L'espace était cloisonné, manquait de lumière naturelle et nécessitait une réorganisation complète pour répondre aux besoins actuels.";
   const solutions = project.solutions || "Nous avons opté pour un agencement ouvert en supprimant certaines cloisons non porteuses. Les matériaux naturels (bois, pierre) ont été préservés et mis en valeur. L'éclairage a été entièrement repensé avec un mélange de sources directes et indirectes pour créer une ambiance chaleureuse.";
   const results = project.results || "Le résultat est un espace à la fois contemporain et chaleureux, où la lumière circule librement. Le client bénéficie désormais d'un lieu de vie fluide, fonctionnel et esthétique qui correspond parfaitement à son mode de vie et à ses attentes.";
+
+  const handleOpenImage = (image: string) => {
+    setSelectedImage(image);
+  };
+
+  const handleCloseImage = () => {
+    setSelectedImage(null);
+  };
+
+  // Default gallery images if none provided
+  const galleryImages = project.gallery && project.gallery.length > 0 
+    ? project.gallery 
+    : project.afterImage 
+      ? [project.afterImage] 
+      : project.image 
+        ? [project.image]
+        : [];
 
   return (
     <div className="fixed inset-0 bg-background z-50 overflow-y-auto">
@@ -73,7 +92,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
         </div>
 
         {/* Before/After or main image */}
-        <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
+        <div className="mb-10 rounded-xl overflow-hidden shadow-lg">
           {project.hasBeforeAfter && project.beforeImage && project.afterImage ? (
             <div className="h-[500px]">
               <BeforeAfterSlider
@@ -91,6 +110,28 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
             )
           )}
         </div>
+
+        {/* Image Gallery */}
+        {galleryImages.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-serif mb-4 text-design-charcoal">Galerie du projet</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {galleryImages.map((image, index) => (
+                <div 
+                  key={index} 
+                  className="aspect-square rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  onClick={() => handleOpenImage(image)}
+                >
+                  <img 
+                    src={image} 
+                    alt={`${project.title} - photo ${index + 1}`}
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Storytelling sections */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -116,34 +157,6 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </Card>
         </div>
 
-        {/* Project gallery (if available) */}
-        {project.gallery && project.gallery.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-serif mb-6 text-design-charcoal">Galerie photos</h2>
-            <Carousel className="w-full">
-              <CarouselContent>
-                {project.gallery.map((image, index) => (
-                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-1">
-                      <Card>
-                        <CardContent className="flex aspect-square items-center justify-center p-0">
-                          <img 
-                            src={image} 
-                            alt={`${project.title} - image ${index + 1}`}
-                            className="w-full h-full object-cover rounded-lg"
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </div>
-        )}
-
         {/* Call to action */}
         <div className="text-center bg-muted p-8 rounded-xl">
           <h3 className="text-2xl font-serif mb-4 text-design-charcoal">Vous avez un projet similaire ?</h3>
@@ -161,6 +174,31 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4"
+          onClick={handleCloseImage}
+        >
+          <div className="relative max-w-4xl w-full">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="absolute top-2 right-2 bg-white/20 hover:bg-white/40 z-10 rounded-full"
+              onClick={handleCloseImage}
+            >
+              <X className="h-6 w-6 text-white" />
+            </Button>
+            <img 
+              src={selectedImage} 
+              alt="Vue agrandie" 
+              className="max-h-[85vh] w-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
