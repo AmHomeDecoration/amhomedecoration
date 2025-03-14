@@ -1,14 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselPrevious, 
-  CarouselNext 
-} from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import {
   Pagination,
@@ -21,25 +14,17 @@ import {
 
 const ProjectGallery = ({ images }: { images: string[] }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [api, setApi] = useState<any>(null);
-  const [current, setCurrent] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 4;
 
   // Si moins de 1 image, ne rien afficher
   if (!images || images.length < 1) return null;
 
-  useEffect(() => {
-    if (!api) return;
-    
-    const onChange = () => {
-      setCurrent(api.selectedScrollSnap());
-    };
-    
-    api.on("select", onChange);
-    
-    return () => {
-      api.off("select", onChange);
-    };
-  }, [api]);
+  // Calculate pagination
+  const totalPages = Math.ceil(images.length / imagesPerPage);
+  const indexOfLastImage = currentPage * imagesPerPage;
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage;
+  const currentImages = images.slice(indexOfFirstImage, indexOfLastImage);
 
   const handleOpenImage = (image: string) => {
     setSelectedImage(image);
@@ -49,81 +34,41 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
     setSelectedImage(null);
   };
 
-  const goToSlide = (index: number) => {
-    api?.scrollTo(index);
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const goToPreviousPage = () => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
   return (
     <div className="my-16">
       <h3 className="text-3xl font-serif mb-6 text-center">DÉTAILS DU PROJET</h3>
       
-      <Carousel 
-        className="w-full relative"
-        setApi={setApi}
-        opts={{
-          loop: true,
-          align: "start",
-        }}
-      >
-        <CarouselContent>
-          {images.map((img, index) => (
-            <CarouselItem key={index}>
-              <div 
-                className="overflow-hidden rounded-lg cursor-pointer h-80 md:h-[400px]"
-                onClick={() => handleOpenImage(img)}
-              >
-                <img 
-                  src={img} 
-                  alt={`Projet ${index + 1}`} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        
-        {images.length > 1 && (
-          <>
-            <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselPrevious className="bg-white/80 hover:bg-white border-none">
-                <ChevronLeft className="h-4 w-4" />
-              </CarouselPrevious>
-            </div>
-            <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-10">
-              <CarouselNext className="bg-white/80 hover:bg-white border-none">
-                <ChevronRight className="h-4 w-4" />
-              </CarouselNext>
-            </div>
-          </>
-        )}
-      </Carousel>
-      
-      {/* Thumbnails below the carousel */}
-      {images.length > 1 && (
-        <div className="mt-6 overflow-x-auto pb-2">
-          <div className="flex gap-2 justify-center">
-            {images.map((img, index) => (
-              <div 
-                key={index}
-                className={cn(
-                  "h-16 w-24 overflow-hidden rounded cursor-pointer transition-opacity border-2",
-                  current === index ? "border-design-charcoal opacity-100" : "border-transparent opacity-70 hover:opacity-100"
-                )}
-                onClick={() => goToSlide(index)}
-              >
-                <img 
-                  src={img} 
-                  alt={`Miniature ${index + 1}`} 
-                  className="w-full h-full object-cover" 
-                />
-              </div>
-            ))}
+      {/* Grid Gallery Layout */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {currentImages.map((img, index) => (
+          <div 
+            key={index} 
+            className="overflow-hidden rounded-lg cursor-pointer h-60 md:h-64"
+            onClick={() => handleOpenImage(img)}
+          >
+            <img 
+              src={img} 
+              alt={`Projet ${indexOfFirstImage + index + 1}`} 
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+            />
           </div>
-        </div>
-      )}
+        ))}
+      </div>
       
-      {/* Pagination numérique style */}
-      {images.length > 1 && (
+      {/* Pagination controls */}
+      {images.length > imagesPerPage && (
         <div className="mt-8">
           <Pagination>
             <PaginationContent>
@@ -132,22 +77,23 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
                   href="#" 
                   onClick={(e) => {
                     e.preventDefault();
-                    api?.scrollPrev();
-                  }} 
+                    goToPreviousPage();
+                  }}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
               
-              {images.map((_, index) => (
-                <PaginationItem key={index}>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
                   <PaginationLink 
                     href="#" 
-                    isActive={current === index}
+                    isActive={currentPage === page}
                     onClick={(e) => {
                       e.preventDefault();
-                      api?.scrollTo(index);
+                      goToPage(page);
                     }}
                   >
-                    {index + 1}
+                    {page}
                   </PaginationLink>
                 </PaginationItem>
               ))}
@@ -157,8 +103,9 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
                   href="#" 
                   onClick={(e) => {
                     e.preventDefault();
-                    api?.scrollNext();
-                  }} 
+                    goToNextPage();
+                  }}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
             </PaginationContent>
