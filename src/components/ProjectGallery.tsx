@@ -10,6 +10,14 @@ import {
   CarouselNext 
 } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const ProjectGallery = ({ images }: { images: string[] }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -85,20 +93,47 @@ const ProjectGallery = ({ images }: { images: string[] }) => {
           </>
         )}
         
-        {/* Pagination dots at bottom */}
+        {/* Pagination numérique style */}
         {images.length > 1 && (
-          <div className="flex justify-center gap-3 mt-8">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                className={cn(
-                  "h-3 w-3 rounded-full transition-colors",
-                  current === index ? "bg-gray-800" : "bg-gray-300"
-                )}
-                onClick={() => api?.scrollTo(index)}
-                aria-label={`Aller à l'image ${index + 1}`}
-              />
-            ))}
+          <div className="mt-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    href="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      api?.scrollPrev();
+                    }} 
+                  />
+                </PaginationItem>
+                
+                {images.map((_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink 
+                      href="#" 
+                      isActive={current === index}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        api?.scrollTo(index);
+                      }}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    href="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      api?.scrollNext();
+                    }} 
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </Carousel>
