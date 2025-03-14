@@ -50,12 +50,10 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
     galleryImages.push(project.afterImage);
   }
 
-  // Create before/after pairs for gallery
-  const beforeAfterPairs = project.beforeAfterGallery || 
-    (project.beforeImage && project.afterImage 
-      ? [{ before: project.beforeImage, after: project.afterImage }] 
-      : []);
-
+  // Create before/after pairs for gallery - removing this section to avoid showing duplicated before/after content
+  const beforeAfterPairs = project.beforeAfterGallery || [];
+  
+  // Only show BeforeAfterGallery if we have explicit beforeAfterGallery pairs, not the default ones
   const hasBeforeAfterGallery = beforeAfterPairs.length > 0;
 
   return (
@@ -78,7 +76,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onClose 
           title={project.title}
         />
 
-        {/* Before/After Gallery Section */}
+        {/* Before/After Gallery Section - Only if explicit beforeAfterGallery pairs exist */}
         {hasBeforeAfterGallery && (
           <BeforeAfterGallery beforeAfterPairs={beforeAfterPairs} />
         )}
