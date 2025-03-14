@@ -23,6 +23,7 @@ interface BeforeAfterGalleryProps {
 const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPairs }) => {
   const [beforeAfterApi, setBeforeAfterApi] = useState<any>(null);
   const [beforeAfterIndex, setBeforeAfterIndex] = useState(0);
+  const [isDraggingSlider, setIsDraggingSlider] = useState(false);
   
   // Limit to a maximum of 4 pairs
   const limitedPairs = beforeAfterPairs.slice(0, 4);
@@ -37,14 +38,39 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
     
     beforeAfterApi.on('select', onSelectHandler);
     
+    // Listen for pointer down events on slider to disable carousel dragging
+    const sliderElements = document.querySelectorAll('.before-after-slider');
+    
+    const handleSliderInteraction = (e: MouseEvent | TouchEvent) => {
+      // Prevent carousel from moving when interacting with the slider
+      if (beforeAfterApi) {
+        beforeAfterApi.stop();
+      }
+    };
+    
+    sliderElements.forEach(el => {
+      el.addEventListener('mousedown', handleSliderInteraction);
+      el.addEventListener('touchstart', handleSliderInteraction);
+    });
+    
     return () => {
       beforeAfterApi.off('select', onSelectHandler);
+      
+      sliderElements.forEach(el => {
+        el.removeEventListener('mousedown', handleSliderInteraction);
+        el.removeEventListener('touchstart', handleSliderInteraction);
+      });
     };
   }, [beforeAfterApi]);
 
   if (pairCount === 0) {
     return null;
   }
+
+  const carouselOptions = {
+    loop: true,
+    draggable: true
+  };
 
   return (
     <div className="mb-12">
@@ -62,9 +88,7 @@ const BeforeAfterGallery: React.FC<BeforeAfterGalleryProps> = ({ beforeAfterPair
       <Carousel 
         className="w-full relative"
         setApi={setBeforeAfterApi}
-        opts={{
-          loop: true
-        }}
+        opts={carouselOptions}
       >
         <CarouselContent>
           {limitedPairs.map((pair, index) => (

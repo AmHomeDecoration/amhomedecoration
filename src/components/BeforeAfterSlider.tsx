@@ -14,10 +14,12 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
     setIsDragging(true);
   };
 
-  const handleTouchStart = () => {
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation(); // Stop event propagation to prevent carousel from capturing it
     setIsDragging(true);
   };
 
@@ -48,7 +50,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleEnd);
-      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchmove', handleTouchMove, { passive: false });
       window.addEventListener('touchend', handleEnd);
     } else {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -65,31 +67,61 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
     };
   }, [isDragging]);
 
+  // Handle touch events to prevent default behavior
+  useEffect(() => {
+    const preventDefaultTouch = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+      }
+    };
+
+    // Add passive: false to allow preventDefault() in touchmove events
+    document.addEventListener('touchmove', preventDefaultTouch, { passive: false });
+    
+    return () => {
+      document.removeEventListener('touchmove', preventDefaultTouch);
+    };
+  }, [isDragging]);
+
   return (
     <div 
       ref={containerRef}
-      className="before-after-slider rounded-lg overflow-hidden"
+      className="before-after-slider relative rounded-lg overflow-hidden h-full"
+      style={{ touchAction: isDragging ? 'none' : 'auto' }}
     >
-      <img 
-        src={beforeImage} 
-        alt="Avant" 
-        className="slider-image"
-      />
-      <img 
-        src={afterImage} 
-        alt="Après" 
-        className="slider-image slider-image-after"
-        style={{ clipPath: `polygon(${position}% 0, 100% 0, 100% 100%, ${position}% 100%)` }}
-      />
+      {/* Before Image (Base Layer) */}
+      <div className="w-full h-full">
+        <img 
+          src={beforeImage} 
+          alt="Avant" 
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+      </div>
       
+      {/* After Image (Top Layer with Clip Path) */}
       <div 
-        className="slider-handle" 
+        className="absolute top-0 left-0 w-full h-full"
+        style={{ 
+          clipPath: `polygon(${position}% 0, 100% 0, 100% 100%, ${position}% 100%)` 
+        }}
+      >
+        <img 
+          src={afterImage} 
+          alt="Après" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      {/* Vertical Divider Line */}
+      <div 
+        className="absolute top-0 bottom-0 w-0.5 bg-white"
         style={{ left: `${position}%` }}
       />
       
+      {/* Slider Handle */}
       <div 
-        className="slider-button"
-        style={{ left: `${position}%` }}
+        className="absolute top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-grab"
+        style={{ left: `${position}%`, transform: 'translate(-50%, -50%)' }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
       >
