@@ -26,9 +26,10 @@ const App: React.FC = () => (
             </Layout>
           } />
           {/* Handle hash routes for smoother navigation */}
-          <Route path="/#about" element={<Index />} />
-          <Route path="/#projects" element={<Index />} />
-          <Route path="/#contact" element={<Index />} />
+          <Route path="/#home" element={<Navigate to="/" />} />
+          <Route path="/#about" element={<Navigate to="/" />} />
+          <Route path="/#projects" element={<Navigate to="/" />} />
+          <Route path="/#contact" element={<Navigate to="/" />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

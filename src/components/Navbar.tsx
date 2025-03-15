@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,11 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeMenu();
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
@@ -50,7 +56,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center" onClick={scrollToTop}>
             <img 
               src="/lovable-uploads/0e4a3a7e-df4f-440f-8443-77e8984f4f00.png" 
               alt="Anne Marie Home Décoration" 
@@ -62,6 +68,7 @@ const Navbar = () => {
             <Link 
               to="/" 
               className="text-foreground hover:text-design-gold transition-colors font-medium"
+              onClick={scrollToTop}
             >
               Accueil
             </Link>
@@ -140,7 +147,7 @@ const Navbar = () => {
         <Link
           to="/"
           className="text-2xl font-medium"
-          onClick={closeMenu}
+          onClick={scrollToTop}
         >
           Accueil
         </Link>

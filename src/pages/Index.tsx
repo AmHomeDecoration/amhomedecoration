@@ -9,7 +9,9 @@ import Layout from '@/components/Layout';
 const Index = () => {
   return (
     <Layout noPadding>
-      <HeroSection />
+      <div id="home">
+        <HeroSection />
+      </div>
       <div id="about">
         <AboutSection />
       </div>
