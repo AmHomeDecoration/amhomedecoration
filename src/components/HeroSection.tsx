@@ -2,10 +2,20 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   // Using the uploaded kitchen image
   const backgroundImageUrl = "/lovable-uploads/8104441e-b394-453a-88de-68ed736dfaa9.png";
+  
+  const handleDiscoverProjects = () => {
+    // Smooth scroll to projects section if on homepage
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   
   return (
     <section 
@@ -32,6 +42,7 @@ const HeroSection = () => {
           <Button 
             size="lg" 
             className="bg-white text-design-charcoal hover:bg-white/90"
+            onClick={handleDiscoverProjects}
           >
             Découvrir mes projets
             <ArrowRight className="ml-2 h-4 w-4" />
