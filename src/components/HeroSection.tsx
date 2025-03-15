@@ -39,44 +39,44 @@ const HeroSection = () => {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 z-10"></div>
+      <div className="absolute inset-0 bg-black/60 z-10"></div>
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight">
           Transformez votre espace,<br />sublimez votre quotidien
         </h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white/90">
+        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-white/90 font-medium">
           Architecture d'intérieur & décoration sur mesure à Argelès-sur-Mer et dans les Pyrénées-Orientales
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-5 justify-center max-w-4xl mx-auto">
           <Button 
             size="lg" 
-            className="bg-white text-design-charcoal hover:bg-white/90"
+            className="bg-white text-design-charcoal hover:bg-white/90 shadow-lg py-6 font-semibold text-base"
             onClick={handleDiscoverProjects}
           >
             Découvrir mes projets
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-white text-white hover:bg-white/20"
+            className="border-2 border-white text-white hover:bg-white/20 shadow-lg py-6 font-semibold text-base"
             onClick={handleServicesClick}
           >
             Prestations & services
-            <ClipboardList className="ml-2 h-4 w-4" />
+            <ClipboardList className="ml-2 h-5 w-5" />
           </Button>
           
           <Button 
             variant="ghost" 
             size="lg" 
-            className="text-white hover:bg-white/10"
+            className="text-white hover:bg-white/20 shadow-lg py-6 font-semibold text-base backdrop-blur-sm bg-black/30"
             onClick={handleContactClick}
           >
             Prendre rendez-vous
-            <MessageSquare className="ml-2 h-4 w-4" />
+            <MessageSquare className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </div>
