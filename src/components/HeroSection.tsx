@@ -52,30 +52,28 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row gap-5 justify-center max-w-4xl mx-auto">
           <Button 
             size="lg" 
-            className="bg-white text-design-charcoal hover:bg-white/90 shadow-lg py-6 font-semibold text-base"
+            className="bg-white text-design-charcoal hover:bg-design-gold hover:text-white shadow-lg py-6 font-semibold text-base transition-colors duration-300"
             onClick={handleDiscoverProjects}
           >
-            Découvrir mes projets
+            <span className="font-serif">Découvrir mes projets</span>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           
           <Button 
-            variant="outline" 
             size="lg" 
-            className="border-2 border-white text-white hover:bg-white/20 shadow-lg py-6 font-semibold text-base"
+            className="bg-white text-design-charcoal hover:bg-design-gold hover:text-white shadow-lg py-6 font-semibold text-base transition-colors duration-300"
             onClick={handleServicesClick}
           >
-            Prestations & services
+            <span className="font-serif">Prestations & services</span>
             <ClipboardList className="ml-2 h-5 w-5" />
           </Button>
           
           <Button 
-            variant="ghost" 
             size="lg" 
-            className="text-white hover:bg-white/20 shadow-lg py-6 font-semibold text-base backdrop-blur-sm bg-black/30"
+            className="bg-white text-design-charcoal hover:bg-design-gold hover:text-white shadow-lg py-6 font-semibold text-base transition-colors duration-300"
             onClick={handleContactClick}
           >
-            Prendre rendez-vous
+            <span className="font-serif">Prendre rendez-vous</span>
             <MessageSquare className="ml-2 h-5 w-5" />
           </Button>
         </div>
