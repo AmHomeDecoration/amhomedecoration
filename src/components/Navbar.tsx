@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +24,13 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const getNavLinkUrl = (path: string) => {
+    if (path.startsWith('#') && !isHomePage) {
+      return `/${path}`;
+    }
+    return path;
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
@@ -31,31 +41,31 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
-          <a href="/" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/0e4a3a7e-df4f-440f-8443-77e8984f4f00.png" 
               alt="Anne Marie Home Décoration" 
               className="h-12 md:h-16" 
             />
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="/" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link to="/" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Accueil
-            </a>
-            <a href="#about" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            </Link>
+            <Link to={getNavLinkUrl('#about')} className="text-foreground hover:text-design-gold transition-colors font-medium">
               À propos
-            </a>
-            <a href="/prestations" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            </Link>
+            <Link to="/prestations" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Prestations
-            </a>
-            <a href="#projects" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            </Link>
+            <Link to={getNavLinkUrl('#projects')} className="text-foreground hover:text-design-gold transition-colors font-medium">
               Réalisations
-            </a>
-            <a href="#contact" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            </Link>
+            <Link to={getNavLinkUrl('#contact')} className="text-foreground hover:text-design-gold transition-colors font-medium">
               Contact
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Navigation Button */}
@@ -76,41 +86,41 @@ const Navbar = () => {
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         } md:hidden`}
       >
-        <a
-          href="/"
+        <Link
+          to="/"
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
           Accueil
-        </a>
-        <a
-          href="#about"
+        </Link>
+        <Link
+          to={getNavLinkUrl('#about')}
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
           À propos
-        </a>
-        <a
-          href="/prestations"
+        </Link>
+        <Link
+          to="/prestations"
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
           Prestations
-        </a>
-        <a
-          href="#projects"
+        </Link>
+        <Link
+          to={getNavLinkUrl('#projects')}
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
           Réalisations
-        </a>
-        <a
-          href="#contact"
+        </Link>
+        <Link
+          to={getNavLinkUrl('#contact')}
           className="text-2xl font-medium"
           onClick={() => setIsOpen(false)}
         >
           Contact
-        </a>
+        </Link>
       </div>
     </nav>
   );

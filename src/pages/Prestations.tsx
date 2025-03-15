@@ -5,8 +5,15 @@ import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Home, Briefcase, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Prestations = () => {
+  const navigate = useNavigate();
+  
+  const handleContactClick = () => {
+    navigate('/#contact');
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
@@ -320,7 +327,11 @@ const Prestations = () => {
                 📍 Zone d'intervention : Argelès-sur-Mer, Perpignan et les Pyrénées-Orientales
               </p>
             </div>
-            <Button size="lg" className="bg-design-charcoal hover:bg-design-black">
+            <Button 
+              size="lg" 
+              className="bg-design-charcoal hover:bg-design-gold hover:text-white transition-colors duration-300"
+              onClick={handleContactClick}
+            >
               Contactez-nous
             </Button>
           </div>
