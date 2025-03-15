@@ -38,15 +38,15 @@ const HeroSection = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 z-10"></div>
+      {/* Lightened Overlay */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20 text-white text-center">
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight text-white drop-shadow-lg">
           Transformez votre espace,<br />sublimez votre quotidien
         </h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-white/90 font-medium">
+        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-white font-medium drop-shadow-md">
           Architecture d'intérieur & décoration sur mesure à Argelès-sur-Mer et dans les Pyrénées-Orientales
         </p>
         <div className="flex flex-col sm:flex-row gap-5 justify-center max-w-4xl mx-auto">
@@ -79,9 +79,9 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Lightened */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
-        <div className="w-10 h-10 border-2 border-white rounded-full flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-white rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
           <svg 
             className="w-4 h-4 text-white" 
             fill="none" 
