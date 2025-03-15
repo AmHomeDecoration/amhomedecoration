@@ -56,9 +56,6 @@ const Navbar = () => {
             <a href="#contact" className="text-foreground hover:text-design-gold transition-colors font-medium">
               Contact
             </a>
-            <Button variant="outline" className="border-design-gold text-design-gold hover:bg-design-gold hover:text-white">
-              Devis gratuit
-            </Button>
           </div>
 
           {/* Mobile Navigation Button */}
@@ -114,9 +111,6 @@ const Navbar = () => {
         >
           Contact
         </a>
-        <Button className="mt-4 w-40 bg-design-gold hover:bg-design-gold/90 text-white">
-          Devis gratuit
-        </Button>
       </div>
     </nav>
   );

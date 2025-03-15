@@ -38,7 +38,7 @@ const HeroSection = () => {
         <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white/90">
           Architecture d'intérieur & décoration sur mesure à Argelès-sur-Mer et dans les Pyrénées-Orientales
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <Button 
             size="lg" 
             className="bg-white text-design-charcoal hover:bg-white/90"
@@ -46,13 +46,6 @@ const HeroSection = () => {
           >
             Découvrir mes projets
             <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="border-white text-white hover:bg-white/20"
-          >
-            Demander un devis
           </Button>
         </div>
       </div>
