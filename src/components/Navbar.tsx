@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,6 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,10 +23,17 @@ const Navbar = () => {
   };
 
   const getNavLinkUrl = (path: string) => {
-    if (path.startsWith('#') && !isHomePage) {
+    if (path.startsWith('#')) {
+      if (location.pathname === '/') {
+        return path;
+      } 
       return `/${path}`;
     }
     return path;
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -49,26 +54,39 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link 
+              to="/" 
+              className="text-foreground hover:text-design-gold transition-colors font-medium"
+            >
               Accueil
             </Link>
-            <Link to={getNavLinkUrl('#about')} className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link 
+              to={getNavLinkUrl('#about')} 
+              className="text-foreground hover:text-design-gold transition-colors font-medium"
+            >
               À propos
             </Link>
-            <Link to="/prestations" className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link 
+              to="/prestations" 
+              className="text-foreground hover:text-design-gold transition-colors font-medium"
+            >
               Prestations
             </Link>
-            <Link to={getNavLinkUrl('#projects')} className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link 
+              to={getNavLinkUrl('#projects')} 
+              className="text-foreground hover:text-design-gold transition-colors font-medium"
+            >
               Réalisations
             </Link>
-            <Link to={getNavLinkUrl('#contact')} className="text-foreground hover:text-design-gold transition-colors font-medium">
+            <Link 
+              to={getNavLinkUrl('#contact')} 
+              className="text-foreground hover:text-design-gold transition-colors font-medium"
+            >
               Contact
             </Link>
           </div>
 
-          {/* Mobile Navigation Button */}
           <Button
             variant="ghost"
             className="inline-flex md:hidden"
@@ -80,7 +98,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
       <div
         className={`fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center space-y-8 transition-all duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -89,35 +106,35 @@ const Navbar = () => {
         <Link
           to="/"
           className="text-2xl font-medium"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
         >
           Accueil
         </Link>
         <Link
           to={getNavLinkUrl('#about')}
           className="text-2xl font-medium"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
         >
           À propos
         </Link>
         <Link
           to="/prestations"
           className="text-2xl font-medium"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
         >
           Prestations
         </Link>
         <Link
           to={getNavLinkUrl('#projects')}
           className="text-2xl font-medium"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
         >
           Réalisations
         </Link>
         <Link
           to={getNavLinkUrl('#contact')}
           className="text-2xl font-medium"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMenu}
         >
           Contact
         </Link>
