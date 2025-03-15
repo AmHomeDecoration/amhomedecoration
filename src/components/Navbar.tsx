@@ -23,12 +23,16 @@ const Navbar = () => {
   };
 
   const getNavLinkUrl = (path: string) => {
+    // If it's a section link (starts with #)
     if (path.startsWith('#')) {
+      // If we're already on the homepage, just return the anchor
       if (location.pathname === '/') {
         return path;
-      } 
+      }
+      // Otherwise, navigate to homepage + the anchor
       return `/${path}`;
     }
+    // For regular pages, return the path as is
     return path;
   };
 
@@ -64,6 +68,16 @@ const Navbar = () => {
             <Link 
               to={getNavLinkUrl('#about')} 
               className="text-foreground hover:text-design-gold transition-colors font-medium"
+              onClick={(e) => {
+                if (location.pathname !== '/') {
+                  // Don't prevent default - let it navigate to homepage first
+                } else {
+                  // We're already on homepage, scroll to the section
+                  e.preventDefault();
+                  document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
+                }
+                closeMenu();
+              }}
             >
               À propos
             </Link>
@@ -76,12 +90,32 @@ const Navbar = () => {
             <Link 
               to={getNavLinkUrl('#projects')} 
               className="text-foreground hover:text-design-gold transition-colors font-medium"
+              onClick={(e) => {
+                if (location.pathname !== '/') {
+                  // Don't prevent default - let it navigate to homepage first
+                } else {
+                  // We're already on homepage, scroll to the section
+                  e.preventDefault();
+                  document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
+                }
+                closeMenu();
+              }}
             >
               Réalisations
             </Link>
             <Link 
               to={getNavLinkUrl('#contact')} 
               className="text-foreground hover:text-design-gold transition-colors font-medium"
+              onClick={(e) => {
+                if (location.pathname !== '/') {
+                  // Don't prevent default - let it navigate to homepage first
+                } else {
+                  // We're already on homepage, scroll to the section
+                  e.preventDefault();
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                }
+                closeMenu();
+              }}
             >
               Contact
             </Link>
@@ -113,7 +147,16 @@ const Navbar = () => {
         <Link
           to={getNavLinkUrl('#about')}
           className="text-2xl font-medium"
-          onClick={closeMenu}
+          onClick={(e) => {
+            if (location.pathname !== '/') {
+              // Don't prevent default - let it navigate to homepage first
+            } else {
+              // We're already on homepage, scroll to the section
+              e.preventDefault();
+              document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
+            }
+            closeMenu();
+          }}
         >
           À propos
         </Link>
@@ -127,14 +170,32 @@ const Navbar = () => {
         <Link
           to={getNavLinkUrl('#projects')}
           className="text-2xl font-medium"
-          onClick={closeMenu}
+          onClick={(e) => {
+            if (location.pathname !== '/') {
+              // Don't prevent default - let it navigate to homepage first
+            } else {
+              // We're already on homepage, scroll to the section
+              e.preventDefault();
+              document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
+            }
+            closeMenu();
+          }}
         >
           Réalisations
         </Link>
         <Link
           to={getNavLinkUrl('#contact')}
           className="text-2xl font-medium"
-          onClick={closeMenu}
+          onClick={(e) => {
+            if (location.pathname !== '/') {
+              // Don't prevent default - let it navigate to homepage first
+            } else {
+              // We're already on homepage, scroll to the section
+              e.preventDefault();
+              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+            }
+            closeMenu();
+          }}
         >
           Contact
         </Link>

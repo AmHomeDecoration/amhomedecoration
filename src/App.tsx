@@ -25,10 +25,10 @@ const App: React.FC = () => (
               <Prestations />
             </Layout>
           } />
-          {/* Redirect hash routes when not on homepage */}
-          <Route path="/#about" element={<Navigate to="/#about" replace />} />
-          <Route path="/#projects" element={<Navigate to="/#projects" replace />} />
-          <Route path="/#contact" element={<Navigate to="/#contact" replace />} />
+          {/* Handle hash routes for smoother navigation */}
+          <Route path="/#about" element={<Index />} />
+          <Route path="/#projects" element={<Index />} />
+          <Route path="/#contact" element={<Index />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

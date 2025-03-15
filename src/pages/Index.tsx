@@ -10,9 +10,15 @@ const Index = () => {
   return (
     <Layout noPadding>
       <HeroSection />
-      <AboutSection />
-      <ProjectsSection />
-      <ContactSection />
+      <div id="about">
+        <AboutSection />
+      </div>
+      <div id="projects">
+        <ProjectsSection />
+      </div>
+      <div id="contact">
+        <ContactSection />
+      </div>
     </Layout>
   );
 };
