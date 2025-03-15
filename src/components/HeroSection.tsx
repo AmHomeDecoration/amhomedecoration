@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ClipboardList, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const HeroSection = () => {
@@ -14,6 +14,17 @@ const HeroSection = () => {
     const projectsSection = document.getElementById('projects');
     if (projectsSection) {
       projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  const handleServicesClick = () => {
+    navigate('/prestations');
+  };
+  
+  const handleContactClick = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
   
@@ -38,7 +49,7 @@ const HeroSection = () => {
         <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white/90">
           Architecture d'intérieur & décoration sur mesure à Argelès-sur-Mer et dans les Pyrénées-Orientales
         </p>
-        <div className="flex justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
             size="lg" 
             className="bg-white text-design-charcoal hover:bg-white/90"
@@ -46,6 +57,26 @@ const HeroSection = () => {
           >
             Découvrir mes projets
             <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="border-white text-white hover:bg-white/20"
+            onClick={handleServicesClick}
+          >
+            Prestations & services
+            <ClipboardList className="ml-2 h-4 w-4" />
+          </Button>
+          
+          <Button 
+            variant="ghost" 
+            size="lg" 
+            className="text-white hover:bg-white/10"
+            onClick={handleContactClick}
+          >
+            Prendre rendez-vous
+            <MessageSquare className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
