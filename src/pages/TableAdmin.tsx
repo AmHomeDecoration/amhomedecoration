@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,40 +51,33 @@ const TableAdmin = () => {
   const fetchTables = async () => {
     setLoading(true);
     try {
-      // Utiliser une fonction RPC personnalisée pour obtenir les tables
+      // Utiliser la fonction RPC personnalisée pour obtenir les tables
       const { data, error } = await supabase.rpc('get_user_tables');
       
       if (error) {
-        // Si la fonction RPC n'existe pas encore, utilisez cette méthode alternative
-        // qui fonctionne avec les droits d'administrateur de la base
-        const { data: tables, error: tablesError } = await supabase.auth.getSession();
+        console.error("Erreur lors de la récupération des tables:", error);
         
-        if (tablesError) throw tablesError;
+        // Méthode alternative si la fonction RPC échoue
+        const availableTables = ['profiles', 'temporary_access_tokens'];
+        setTables(availableTables);
         
-        if (tables && tables.session) {
-          // Récupérer manuellement les tables accessibles à l'utilisateur
-          // Cette approche est temporaire en attendant la création de la fonction RPC
-          const availableTables = ['profiles', 'temporary_access_tokens'];
-          setTables(availableTables);
-          
-          if (availableTables.length > 0 && !currentTable) {
-            setCurrentTable(availableTables[0]);
-            await fetchTableData(availableTables[0]);
-          } else if (currentTable) {
-            await fetchTableData(currentTable);
-          }
-          setLoading(false);
-          return;
+        if (availableTables.length > 0 && !currentTable) {
+          setCurrentTable(availableTables[0]);
+          await fetchTableData(availableTables[0]);
+        } else if (currentTable) {
+          await fetchTableData(currentTable);
         }
-        
-        throw error;
+        setLoading(false);
+        return;
       }
       
       if (data) {
-        const tableNames = data.filter((name: string) => 
-          name !== 'schema_migrations' && 
-          name !== 'pg_stat_statements'
-        );
+        const tableNames = data
+          .filter((item: any) => 
+            item.table_name !== 'schema_migrations' && 
+            item.table_name !== 'pg_stat_statements'
+          )
+          .map((item: any) => item.table_name);
         
         setTables(tableNames);
         
@@ -107,16 +101,15 @@ const TableAdmin = () => {
 
   const fetchTableSchema = async (tableName: string) => {
     try {
-      // Récupérer le schéma de la table en utilisant une fonction RPC pour contourner les limitations du type
+      // Récupérer le schéma de la table en utilisant la fonction RPC
       const { data: columnsData, error: columnsError } = await supabase.rpc('get_table_columns', { 
         table_name: tableName 
       });
       
       if (columnsError) {
-        // Méthode alternative si la fonction RPC n'est pas disponible
-        console.log("Utilisation de la méthode alternative pour obtenir les colonnes");
+        console.error("Erreur lors de la récupération du schéma:", columnsError);
         
-        // Créer un schéma basique avec les colonnes connues des types TypeScript
+        // Méthode alternative si la fonction RPC échoue
         const schemaMap: Record<string, TableSchema> = {
           profiles: {
             name: 'profiles',
@@ -153,12 +146,12 @@ const TableAdmin = () => {
       // Formater les données de colonnes en schéma
       const schema: TableSchema = {
         name: tableName,
-        columns: columnsData?.map((col: any) => ({
+        columns: columnsData.map((col: any) => ({
           name: col.column_name,
           type: col.data_type,
           is_nullable: col.is_nullable === 'YES',
           is_primary: col.is_primary === true,
-        })) || [],
+        })),
       };
       
       setTableSchema(schema);
@@ -180,8 +173,11 @@ const TableAdmin = () => {
       
       if (!schema) return;
       
-      // Cette partie est sûre car on utilise le nom de la table directement
-      // qui correspondra aux types disponibles dans Supabase
+      // S'assurer que le nom de la table est un nom valide des tables disponibles dans Supabase
+      if (!['profiles', 'temporary_access_tokens'].includes(tableName)) {
+        throw new Error(`La table ${tableName} n'est pas accessible via l'API Supabase`);
+      }
+      
       const { data, error } = await supabase
         .from(tableName)
         .select('*');
@@ -258,12 +254,22 @@ const TableAdmin = () => {
   const saveRow = async () => {
     if (!currentTable || (!editingRow && !newRow)) return;
     
+    // Vérifier si la table est accessible via l'API Supabase
+    if (!['profiles', 'temporary_access_tokens'].includes(currentTable)) {
+      toast({
+        title: "Erreur",
+        description: `La table ${currentTable} n'est pas accessible via l'API Supabase`,
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       if (isCreating && newRow) {
         // Création d'une nouvelle ligne
         const { data, error } = await supabase
           .from(currentTable)
-          .insert([newRow as any])
+          .insert([newRow])
           .select();
         
         if (error) throw error;
@@ -276,7 +282,7 @@ const TableAdmin = () => {
         // Édition d'une ligne existante
         const { data, error } = await supabase
           .from(currentTable)
-          .update(editingRow as any)
+          .update(editingRow)
           .match(getPrimaryKeyMatch(editingRow))
           .select();
         
@@ -301,6 +307,16 @@ const TableAdmin = () => {
 
   const deleteRow = async (row: TableData) => {
     if (!currentTable) return;
+    
+    // Vérifier si la table est accessible via l'API Supabase
+    if (!['profiles', 'temporary_access_tokens'].includes(currentTable)) {
+      toast({
+        title: "Erreur",
+        description: `La table ${currentTable} n'est pas accessible via l'API Supabase`,
+        variant: "destructive",
+      });
+      return;
+    }
     
     if (!confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?")) {
       return;
@@ -450,7 +466,7 @@ const TableAdmin = () => {
     return (
       <Input
         type={column.type.includes('int') ? 'number' : 'text'}
-        value={value === null ? '' : value}
+        value={value === null ? '' : String(value)}
         onChange={(e) => {
           let val = e.target.value;
           

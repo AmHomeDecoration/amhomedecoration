@@ -65,6 +65,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_table_columns: {
+        Args: {
+          table_name: string
+        }
+        Returns: {
+          column_name: string
+          data_type: string
+          is_nullable: string
+          is_primary: boolean
+        }[]
+      }
+      get_user_tables: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          table_name: string
+        }[]
+      }
       validate_temporary_token: {
         Args: {
           token_value: string
