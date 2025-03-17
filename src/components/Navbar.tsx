@@ -21,13 +21,10 @@ const Navbar = () => {
         <div className="flex items-center">
           <Link to="/" className="flex items-center justify-center">
             <img 
-              src="/lovable-uploads/40dfacc8-e0a4-44a9-b3f6-b4d53b7178e1.png" 
-              alt="AMPStudio Logo" 
-              className="h-14 w-14 mr-3"
+              src="/lovable-uploads/048b101c-3e2d-44ee-80fc-412db05f1dd6.png" 
+              alt="Anne Marie HOME DÉCORATION" 
+              className="h-16 w-16 mr-2"
             />
-            <span className="font-serif font-bold text-3xl hidden lg:inline-block text-design-charcoal">
-              AMPStudio
-            </span>
           </Link>
         </div>
 
@@ -87,7 +84,7 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader className="mb-4">
-                <SheetTitle>AMPStudio</SheetTitle>
+                <SheetTitle>Anne Marie HOME DÉCORATION</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4">
                 <li>
