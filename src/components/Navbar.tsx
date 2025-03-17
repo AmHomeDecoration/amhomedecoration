@@ -11,23 +11,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import TopBanner from './TopBanner';
 
 const Navbar = () => {
   const { isAuthenticated, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <TopBanner />
-      
       <nav className="container flex h-16 items-center">
         <div className="flex items-center lg:ml-8">
           <Link to="/" className="flex items-center justify-center">
-            <span className="font-inter font-bold text-2xl hidden lg:inline-block">
-              EMPStudio
+            <span className="font-serif font-bold text-3xl hidden lg:inline-block text-design-charcoal">
+              AMPStudio
             </span>
-            <span className="font-inter font-bold text-2xl inline-block lg:hidden">
-              EMPS
+            <span className="font-serif font-bold text-2xl inline-block lg:hidden text-design-charcoal">
+              AMP
             </span>
           </Link>
         </div>
@@ -35,22 +32,22 @@ const Navbar = () => {
         <div className="flex-1 flex justify-center">
           <ul className="hidden lg:flex items-center gap-6 text-sm font-medium">
             <li>
-              <Link to="/#home" className="hover:text-primary transition-colors duration-200">
+              <Link to="/" className="hover:text-primary transition-colors duration-200">
                 Accueil
               </Link>
             </li>
             <li>
-              <Link to="/#about" className="hover:text-primary transition-colors duration-200">
+              <Link to="/a-propos" className="hover:text-primary transition-colors duration-200">
                 À Propos
               </Link>
             </li>
             <li>
-              <Link to="/#projects" className="hover:text-primary transition-colors duration-200">
+              <Link to="/projets" className="hover:text-primary transition-colors duration-200">
                 Projets
               </Link>
             </li>
             <li>
-              <Link to="/#contact" className="hover:text-primary transition-colors duration-200">
+              <Link to="/contact" className="hover:text-primary transition-colors duration-200">
                 Contact
               </Link>
             </li>
@@ -88,26 +85,26 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader className="mb-4">
-                <SheetTitle>EMPStudio</SheetTitle>
+                <SheetTitle>AMPStudio</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-4">
                 <li>
-                  <Link to="/#home" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                  <Link to="/" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
                     Accueil
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#about" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                  <Link to="/a-propos" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
                     À Propos
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#projects" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                  <Link to="/projets" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
                     Projets
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#contact" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                  <Link to="/contact" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
                     Contact
                   </Link>
                 </li>

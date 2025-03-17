@@ -1,13 +1,14 @@
 
 import React from 'react';
-import { MapPin, Mail, Phone, Facebook, Youtube, Instagram, Twitter } from 'lucide-react';
+import { MapPin, Mail, Phone } from 'lucide-react';
+import { Facebook, Youtube, Instagram, Twitter } from 'lucide-react';
 
 const TopBanner = () => {
   return (
-    <div className="w-full bg-design-charcoal text-white py-1 px-4">
-      <div className="container mx-auto flex justify-between items-center text-xs">
-        <div className="flex items-center space-x-6">
-          <a href="https://maps.app.goo.gl/TBsNrz9Yzm3G7NWB7" className="flex items-center hover:text-design-gold transition-colors" target="_blank" rel="noopener noreferrer">
+    <div className="w-full bg-design-charcoal text-white py-2 px-4">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-xs md:text-sm">
+        <div className="flex flex-col md:flex-row items-center md:space-x-6 mb-2 md:mb-0">
+          <a href="https://maps.app.goo.gl/TBsNrz9Yzm3G7NWB7" className="flex items-center hover:text-design-gold transition-colors mb-1 md:mb-0" target="_blank" rel="noopener noreferrer">
             <MapPin size={14} className="mr-1" />
             <span>9 b, route nationale, Argelès sur mer</span>
           </a>
