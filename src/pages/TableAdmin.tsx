@@ -214,7 +214,7 @@ const TableAdmin = () => {
       }
       
       if (col.type.includes('int')) {
-        emptyRow[col.name] = '0'; // Initialiser comme string
+        emptyRow[col.name] = null; // Initialize as null
       } else if (col.type.includes('bool')) {
         emptyRow[col.name] = false;
       } else if (col.type.includes('json')) {
@@ -262,7 +262,7 @@ const TableAdmin = () => {
           
           const { data, error } = await supabase
             .from(currentTable)
-            .insert([profileData])
+            .insert(profileData)
             .select();
           
           if (error) throw error;
@@ -279,7 +279,7 @@ const TableAdmin = () => {
           
           const { data, error } = await supabase
             .from(currentTable)
-            .insert([tokenData])
+            .insert(tokenData)
             .select();
           
           if (error) throw error;

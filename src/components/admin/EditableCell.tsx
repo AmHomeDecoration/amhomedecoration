@@ -73,13 +73,14 @@ const EditableCell: React.FC<EditableCellProps> = ({ column, value, onChange }) 
       onChange={(e) => {
         let val = e.target.value;
         
-        if (column.type.includes('int') && val !== '') {
-          const numVal = parseInt(val, 10);
-          if (!isNaN(numVal)) {
-            val = String(numVal);
+        // For numeric fields, ensure we're handling empty strings
+        if (column.type.includes('int')) {
+          if (val === '') {
+            val = column.is_nullable ? null : '0';
           }
         }
         
+        // Handle nullable fields
         if (val === '' && column.is_nullable) {
           val = null;
         }
