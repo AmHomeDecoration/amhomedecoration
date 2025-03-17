@@ -5,38 +5,22 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader, RefreshCw, Save, Plus, Trash2 } from 'lucide-react';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Loader } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { Database } from '@/integrations/supabase/types';
+import { 
+  TableData, 
+  TableSchema,
+  ProfileInsert, 
+  TempTokenInsert, 
+  isValidTableName 
+} from '@/types/admin';
 
-// Définir les types spécifiques pour chaque table
-type ProfileRow = Database['public']['Tables']['profiles']['Row'];
-type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
-type TempTokenRow = Database['public']['Tables']['temporary_access_tokens']['Row'];
-type TempTokenInsert = Database['public']['Tables']['temporary_access_tokens']['Insert'];
-
-interface TableSchema {
-  name: string;
-  columns: {
-    name: string;
-    type: string;
-    is_nullable: boolean;
-    is_primary: boolean;
-  }[];
-}
-
-interface TableData {
-  [key: string]: any;
-}
-
-// Type guard pour vérifier si un nom de table est valide pour la requête Supabase
-const isValidTableName = (tableName: string): tableName is "profiles" | "temporary_access_tokens" => {
-  return tableName === "profiles" || tableName === "temporary_access_tokens";
-};
+// Import refactored components
+import TableSelectorTabs from '@/components/admin/TableSelectorTabs';
+import TableContent from '@/components/admin/TableContent';
+import CellValue from '@/components/admin/CellValue';
+import EditableCell from '@/components/admin/EditableCell';
 
 const TableAdmin = () => {
   const navigate = useNavigate();
@@ -142,7 +126,7 @@ const TableAdmin = () => {
           }
         };
         
-        const schema = schemaMap[tableName];
+        const schema = schemaMap[tableName as keyof typeof schemaMap];
         if (schema) {
           setTableSchema(schema);
           return schema;
@@ -307,7 +291,7 @@ const TableAdmin = () => {
         });
       } else if (editingRow) {
         if (currentTable === 'profiles') {
-          const profileData: Partial<ProfileRow> = {
+          const profileData: Partial<ProfileInsert> = {
             id: editingRow.id,
             username: editingRow.username || null,
             avatar_url: editingRow.avatar_url || null,
@@ -322,7 +306,7 @@ const TableAdmin = () => {
           
           if (error) throw error;
         } else if (currentTable === 'temporary_access_tokens') {
-          const tokenData: Partial<TempTokenRow> = {
+          const tokenData: Partial<TempTokenInsert> = {
             id: editingRow.id,
             token: editingRow.token,
             valid_until: editingRow.valid_until,
@@ -426,108 +410,15 @@ const TableAdmin = () => {
   };
 
   const renderCellValue = (value: any, column: any) => {
-    if (value === null) return <span className="text-gray-400">NULL</span>;
-    
-    if (typeof value === 'object') {
-      try {
-        return <span className="font-mono text-xs">{JSON.stringify(value)}</span>;
-      } catch {
-        return <span className="text-gray-400">[Objet]</span>;
-      }
-    }
-    
-    if (typeof value === 'boolean') {
-      return value ? 'true' : 'false';
-    }
-    
-    if (column.type.includes('timestamp') && value) {
-      try {
-        return new Date(value).toLocaleString();
-      } catch {
-        return value;
-      }
-    }
-    
-    return String(value);
+    return <CellValue value={value} column={column} />;
   };
 
   const renderEditableCell = (row: TableData, column: any) => {
-    const value = row[column.name];
-    
-    if (column.type.includes('bool')) {
-      return (
-        <select
-          value={value === null ? 'null' : value.toString()}
-          onChange={(e) => {
-            let val;
-            if (e.target.value === 'null') val = null;
-            else if (e.target.value === 'true') val = true;
-            else val = false;
-            handleInputChange(column.name, val);
-          }}
-          disabled={column.is_primary}
-          className="w-full p-1 border rounded"
-        >
-          {column.is_nullable && <option value="null">NULL</option>}
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
-      );
-    }
-    
-    if (column.type.includes('json')) {
-      return (
-        <textarea
-          value={value !== null ? JSON.stringify(value, null, 2) : ''}
-          onChange={(e) => {
-            try {
-              const val = e.target.value.trim() === '' ? null : JSON.parse(e.target.value);
-              handleInputChange(column.name, val);
-            } catch {
-              // Ignorer les erreurs de parsing JSON
-            }
-          }}
-          disabled={column.is_primary}
-          className="w-full p-1 border rounded font-mono text-xs"
-          rows={3}
-        />
-      );
-    }
-    
-    if (column.type.includes('timestamp')) {
-      return (
-        <input
-          type="datetime-local"
-          value={value ? new Date(value).toISOString().slice(0, 16) : ''}
-          onChange={(e) => handleInputChange(column.name, e.target.value ? new Date(e.target.value).toISOString() : null)}
-          disabled={column.is_primary}
-          className="w-full p-1 border rounded"
-        />
-      );
-    }
-    
     return (
-      <Input
-        type={column.type.includes('int') ? 'number' : 'text'}
-        value={value === null ? '' : String(value)}
-        onChange={(e) => {
-          let val = e.target.value;
-          
-          if (column.type.includes('int') && val !== '') {
-            const numVal = parseInt(val, 10);
-            if (!isNaN(numVal)) {
-              val = String(numVal);
-            }
-          }
-          
-          if (val === '' && column.is_nullable) {
-            val = null;
-          }
-          
-          handleInputChange(column.name, val);
-        }}
-        disabled={column.is_primary}
-        className="w-full"
+      <EditableCell
+        column={column}
+        value={row[column.name]}
+        onChange={handleInputChange}
       />
     );
   };
@@ -549,150 +440,31 @@ const TableAdmin = () => {
               </div>
             ) : (
               <Tabs value={currentTable} onValueChange={handleTableChange}>
-                <div className="flex justify-between items-center mb-4">
-                  <TabsList className="overflow-x-auto">
-                    {tables.map(table => (
-                      <TabsTrigger key={table} value={table}>
-                        {table}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={fetchTables}
-                    disabled={loading}
-                  >
-                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Actualiser
-                  </Button>
-                </div>
+                <TableSelectorTabs 
+                  tables={tables} 
+                  loading={loading} 
+                  fetchTables={fetchTables} 
+                />
                 
                 {tables.map(table => (
                   <TabsContent key={table} value={table} className="space-y-4">
-                    <div className="flex justify-between mb-4">
-                      <h3 className="text-lg font-medium">Table: {table}</h3>
-                      <Button onClick={startCreating}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Nouvelle ligne
-                      </Button>
-                    </div>
-                    
-                    {loading ? (
-                      <div className="flex justify-center py-10">
-                        <Loader className="h-8 w-8 animate-spin text-gray-400" />
-                      </div>
-                    ) : (
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              {tableSchema?.columns.map(column => (
-                                <TableHead key={column.name}>
-                                  {column.name}
-                                  {column.is_primary && <span className="text-yellow-500 ml-1">🔑</span>}
-                                  <div className="text-xs text-muted-foreground">
-                                    {column.type}
-                                    {column.is_nullable ? ' (nullable)' : ''}
-                                  </div>
-                                </TableHead>
-                              ))}
-                              <TableHead>Actions</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {isCreating && newRow && (
-                              <TableRow>
-                                {tableSchema?.columns.map(column => (
-                                  <TableCell key={column.name}>
-                                    {renderEditableCell(newRow, column)}
-                                  </TableCell>
-                                ))}
-                                <TableCell>
-                                  <div className="flex space-x-2">
-                                    <Button 
-                                      size="sm" 
-                                      onClick={saveRow} 
-                                      variant="default"
-                                    >
-                                      <Save className="h-4 w-4 mr-1" />
-                                      Sauvegarder
-                                    </Button>
-                                    <Button 
-                                      size="sm" 
-                                      onClick={cancelEditing} 
-                                      variant="outline"
-                                    >
-                                      Annuler
-                                    </Button>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            
-                            {tableData.map((row, index) => (
-                              <TableRow key={index}>
-                                {tableSchema?.columns.map(column => (
-                                  <TableCell key={column.name}>
-                                    {editingRow && row === tableData[tableData.findIndex(r => 
-                                      Object.entries(getPrimaryKeyMatch(r)).every(
-                                        ([key, value]) => editingRow[key] === value
-                                      )
-                                    )] ? (
-                                      renderEditableCell(editingRow, column)
-                                    ) : (
-                                      renderCellValue(row[column.name], column)
-                                    )}
-                                  </TableCell>
-                                ))}
-                                <TableCell>
-                                  {editingRow && row === tableData[tableData.findIndex(r => 
-                                    Object.entries(getPrimaryKeyMatch(r)).every(
-                                      ([key, value]) => editingRow[key] === value
-                                    )
-                                  )] ? (
-                                    <div className="flex space-x-2">
-                                      <Button 
-                                        size="sm" 
-                                        onClick={saveRow} 
-                                        variant="default"
-                                      >
-                                        <Save className="h-4 w-4 mr-1" />
-                                        Sauvegarder
-                                      </Button>
-                                      <Button 
-                                        size="sm" 
-                                        onClick={cancelEditing} 
-                                        variant="outline"
-                                      >
-                                        Annuler
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex space-x-2">
-                                      <Button 
-                                        size="sm" 
-                                        onClick={() => startEditing(row)} 
-                                        variant="outline"
-                                      >
-                                        Éditer
-                                      </Button>
-                                      <Button 
-                                        size="sm" 
-                                        onClick={() => deleteRow(row)} 
-                                        variant="destructive"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    )}
+                    <TableContent
+                      loading={loading}
+                      tableSchema={tableSchema}
+                      tableData={tableData}
+                      isCreating={isCreating}
+                      newRow={newRow}
+                      editingRow={editingRow}
+                      startCreating={startCreating}
+                      startEditing={startEditing}
+                      deleteRow={deleteRow}
+                      saveRow={saveRow}
+                      cancelEditing={cancelEditing}
+                      handleInputChange={handleInputChange}
+                      getPrimaryKeyMatch={getPrimaryKeyMatch}
+                      renderCellValue={renderCellValue}
+                      renderEditableCell={renderEditableCell}
+                    />
                   </TabsContent>
                 ))}
               </Tabs>
