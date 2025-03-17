@@ -17,20 +17,22 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container flex h-16 items-center">
-        <div className="flex items-center lg:ml-8">
+      <nav className="container flex h-20 items-center">
+        <div className="flex items-center">
           <Link to="/" className="flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/40dfacc8-e0a4-44a9-b3f6-b4d53b7178e1.png" 
+              alt="AMPStudio Logo" 
+              className="h-14 w-14 mr-3"
+            />
             <span className="font-serif font-bold text-3xl hidden lg:inline-block text-design-charcoal">
               AMPStudio
-            </span>
-            <span className="font-serif font-bold text-2xl inline-block lg:hidden text-design-charcoal">
-              AMP
             </span>
           </Link>
         </div>
 
         <div className="flex-1 flex justify-center">
-          <ul className="hidden lg:flex items-center gap-6 text-sm font-medium">
+          <ul className="hidden lg:flex items-center gap-8 text-sm font-medium">
             <li>
               <Link to="/" className="hover:text-primary transition-colors duration-200">
                 Accueil
@@ -43,17 +45,17 @@ const Navbar = () => {
             </li>
             <li>
               <Link to="/projets" className="hover:text-primary transition-colors duration-200">
-                Projets
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-primary transition-colors duration-200">
-                Contact
+                Réalisations
               </Link>
             </li>
             <li>
               <Link to="/prestations" className="hover:text-primary transition-colors duration-200">
                 Prestations
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-primary transition-colors duration-200">
+                Contact
               </Link>
             </li>
           </ul>
@@ -100,17 +102,17 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link to="/projets" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
-                    Projets
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
-                    Contact
+                    Réalisations
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
                     Prestations
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    Contact
                   </Link>
                 </li>
                 

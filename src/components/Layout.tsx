@@ -18,7 +18,7 @@ const Layout = ({ children, noPadding = false }: LayoutProps) => {
     <div className="flex min-h-screen flex-col bg-design-beige">
       <TopBanner />
       <Navbar />
-      <main className={`flex-1 ${!noPadding && !isHomePage ? 'pt-12 md:pt-20' : ''}`}>
+      <main className={`flex-1 ${!noPadding && !isHomePage ? 'pt-8 md:pt-12' : ''}`}>
         {children}
       </main>
       <Footer />
