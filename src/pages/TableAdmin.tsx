@@ -26,6 +26,11 @@ interface TableData {
   [key: string]: any;
 }
 
+// Type guard to check if a table name is valid for Supabase query
+const isValidTableName = (tableName: string): tableName is "profiles" | "temporary_access_tokens" => {
+  return tableName === "profiles" || tableName === "temporary_access_tokens";
+};
+
 const TableAdmin = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
@@ -174,7 +179,7 @@ const TableAdmin = () => {
       if (!schema) return;
       
       // S'assurer que le nom de la table est un nom valide des tables disponibles dans Supabase
-      if (!['profiles', 'temporary_access_tokens'].includes(tableName)) {
+      if (!isValidTableName(tableName)) {
         throw new Error(`La table ${tableName} n'est pas accessible via l'API Supabase`);
       }
       
@@ -255,7 +260,7 @@ const TableAdmin = () => {
     if (!currentTable || (!editingRow && !newRow)) return;
     
     // Vérifier si la table est accessible via l'API Supabase
-    if (!['profiles', 'temporary_access_tokens'].includes(currentTable)) {
+    if (!isValidTableName(currentTable)) {
       toast({
         title: "Erreur",
         description: `La table ${currentTable} n'est pas accessible via l'API Supabase`,
@@ -309,7 +314,7 @@ const TableAdmin = () => {
     if (!currentTable) return;
     
     // Vérifier si la table est accessible via l'API Supabase
-    if (!['profiles', 'temporary_access_tokens'].includes(currentTable)) {
+    if (!isValidTableName(currentTable)) {
       toast({
         title: "Erreur",
         description: `La table ${currentTable} n'est pas accessible via l'API Supabase`,
@@ -473,6 +478,10 @@ const TableAdmin = () => {
           // Convertir en nombre si c'est un champ numérique
           if (column.type.includes('int') && val !== '') {
             val = parseInt(val, 10);
+            // Convert to string for compatibility with Supabase types
+            if (!isNaN(val)) {
+              val = String(val);
+            }
           }
           
           // Null si vide et nullable
