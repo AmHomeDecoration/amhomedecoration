@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -56,13 +55,11 @@ const TableAdmin = () => {
   const fetchTables = async () => {
     setLoading(true);
     try {
-      // Utiliser la fonction RPC personnalisée pour obtenir les tables
       const { data, error } = await supabase.rpc('get_user_tables');
       
       if (error) {
         console.error("Erreur lors de la récupération des tables:", error);
         
-        // Méthode alternative si la fonction RPC échoue
         const availableTables = ['profiles', 'temporary_access_tokens'];
         setTables(availableTables);
         
@@ -106,7 +103,6 @@ const TableAdmin = () => {
 
   const fetchTableSchema = async (tableName: string) => {
     try {
-      // Récupérer le schéma de la table en utilisant la fonction RPC
       const { data: columnsData, error: columnsError } = await supabase.rpc('get_table_columns', { 
         table_name: tableName 
       });
@@ -114,7 +110,6 @@ const TableAdmin = () => {
       if (columnsError) {
         console.error("Erreur lors de la récupération du schéma:", columnsError);
         
-        // Méthode alternative si la fonction RPC échoue
         const schemaMap: Record<string, TableSchema> = {
           profiles: {
             name: 'profiles',
@@ -148,7 +143,6 @@ const TableAdmin = () => {
         throw new Error(`Schema pour la table ${tableName} n'est pas disponible`);
       }
       
-      // Formater les données de colonnes en schéma
       const schema: TableSchema = {
         name: tableName,
         columns: columnsData.map((col: any) => ({
@@ -178,7 +172,6 @@ const TableAdmin = () => {
       
       if (!schema) return;
       
-      // S'assurer que le nom de la table est un nom valide des tables disponibles dans Supabase
       if (!isValidTableName(tableName)) {
         throw new Error(`La table ${tableName} n'est pas accessible via l'API Supabase`);
       }
@@ -224,14 +217,12 @@ const TableAdmin = () => {
     
     const emptyRow: TableData = {};
     tableSchema.columns.forEach(col => {
-      // Pour les clés primaires de type UUID, ne pas initialiser (Supabase le fera)
       if (col.is_primary && col.type.includes('uuid')) {
         return;
       }
       
-      // Initialiser les autres champs avec des valeurs par défaut appropriées
       if (col.type.includes('int')) {
-        emptyRow[col.name] = 0;
+        emptyRow[col.name] = '0';
       } else if (col.type.includes('bool')) {
         emptyRow[col.name] = false;
       } else if (col.type.includes('json')) {
@@ -239,13 +230,11 @@ const TableAdmin = () => {
       } else if (col.type.includes('array')) {
         emptyRow[col.name] = [];
       } else if (col.type.includes('timestamp')) {
-        // Laisser null pour que Supabase utilise le défaut si défini
         emptyRow[col.name] = null;
       } else {
         emptyRow[col.name] = '';
       }
       
-      // Si le champ est nullable, initialiser à null
       if (col.is_nullable) {
         emptyRow[col.name] = null;
       }
@@ -259,7 +248,6 @@ const TableAdmin = () => {
   const saveRow = async () => {
     if (!currentTable || (!editingRow && !newRow)) return;
     
-    // Vérifier si la table est accessible via l'API Supabase
     if (!isValidTableName(currentTable)) {
       toast({
         title: "Erreur",
@@ -271,7 +259,6 @@ const TableAdmin = () => {
     
     try {
       if (isCreating && newRow) {
-        // Création d'une nouvelle ligne
         const { data, error } = await supabase
           .from(currentTable)
           .insert([newRow])
@@ -284,7 +271,6 @@ const TableAdmin = () => {
           description: "Ligne ajoutée avec succès.",
         });
       } else if (editingRow) {
-        // Édition d'une ligne existante
         const { data, error } = await supabase
           .from(currentTable)
           .update(editingRow)
@@ -299,7 +285,6 @@ const TableAdmin = () => {
         });
       }
       
-      // Rechargement des données
       await fetchTableData(currentTable);
     } catch (error: any) {
       toast({
@@ -313,7 +298,6 @@ const TableAdmin = () => {
   const deleteRow = async (row: TableData) => {
     if (!currentTable) return;
     
-    // Vérifier si la table est accessible via l'API Supabase
     if (!isValidTableName(currentTable)) {
       toast({
         title: "Erreur",
@@ -340,7 +324,6 @@ const TableAdmin = () => {
         description: "Ligne supprimée avec succès.",
       });
       
-      // Rechargement des données
       await fetchTableData(currentTable);
     } catch (error: any) {
       toast({
@@ -351,7 +334,6 @@ const TableAdmin = () => {
     }
   };
 
-  // Obtenir la condition de correspondance basée sur la clé primaire
   const getPrimaryKeyMatch = (row: TableData) => {
     if (!tableSchema) return {};
     
@@ -382,7 +364,6 @@ const TableAdmin = () => {
   };
 
   const renderCellValue = (value: any, column: any) => {
-    // Affichage des valeurs spéciales
     if (value === null) return <span className="text-gray-400">NULL</span>;
     
     if (typeof value === 'object') {
@@ -397,7 +378,6 @@ const TableAdmin = () => {
       return value ? 'true' : 'false';
     }
     
-    // Date formatée
     if (column.type.includes('timestamp') && value) {
       try {
         return new Date(value).toLocaleString();
@@ -412,9 +392,6 @@ const TableAdmin = () => {
   const renderEditableCell = (row: TableData, column: any) => {
     const value = row[column.name];
     
-    // Désactiver l'édition de la clé primaire
-    const isDisabled = column.is_primary;
-    
     if (column.type.includes('bool')) {
       return (
         <select
@@ -426,7 +403,7 @@ const TableAdmin = () => {
             else val = false;
             handleInputChange(column.name, val);
           }}
-          disabled={isDisabled}
+          disabled={column.is_primary}
           className="w-full p-1 border rounded"
         >
           {column.is_nullable && <option value="null">NULL</option>}
@@ -448,7 +425,7 @@ const TableAdmin = () => {
               // Ignorer les erreurs de parsing JSON
             }
           }}
-          disabled={isDisabled}
+          disabled={column.is_primary}
           className="w-full p-1 border rounded font-mono text-xs"
           rows={3}
         />
@@ -461,13 +438,12 @@ const TableAdmin = () => {
           type="datetime-local"
           value={value ? new Date(value).toISOString().slice(0, 16) : ''}
           onChange={(e) => handleInputChange(column.name, e.target.value ? new Date(e.target.value).toISOString() : null)}
-          disabled={isDisabled}
+          disabled={column.is_primary}
           className="w-full p-1 border rounded"
         />
       );
     }
     
-    // Input standard pour les autres types
     return (
       <Input
         type={column.type.includes('int') ? 'number' : 'text'}
@@ -475,23 +451,20 @@ const TableAdmin = () => {
         onChange={(e) => {
           let val = e.target.value;
           
-          // Convertir en nombre si c'est un champ numérique
           if (column.type.includes('int') && val !== '') {
-            val = parseInt(val, 10);
-            // Convert to string for compatibility with Supabase types
-            if (!isNaN(val)) {
-              val = String(val);
+            const numVal = parseInt(val, 10);
+            if (!isNaN(numVal)) {
+              val = String(numVal);
             }
           }
           
-          // Null si vide et nullable
           if (val === '' && column.is_nullable) {
             val = null;
           }
           
           handleInputChange(column.name, val);
         }}
-        disabled={isDisabled}
+        disabled={column.is_primary}
         className="w-full"
       />
     );
@@ -566,7 +539,6 @@ const TableAdmin = () => {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {/* Ligne pour créer une nouvelle entrée */}
                             {isCreating && newRow && (
                               <TableRow>
                                 {tableSchema?.columns.map(column => (
@@ -596,7 +568,6 @@ const TableAdmin = () => {
                               </TableRow>
                             )}
                             
-                            {/* Afficher les lignes de données */}
                             {tableData.map((row, index) => (
                               <TableRow key={index}>
                                 {tableSchema?.columns.map(column => (
