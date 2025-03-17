@@ -1,6 +1,5 @@
 
 import React from 'react';
-import TopBanner from '@/components/TopBanner';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useLocation } from 'react-router-dom';
@@ -16,7 +15,6 @@ const Layout = ({ children, noPadding = false }: LayoutProps) => {
   
   return (
     <div className="flex min-h-screen flex-col bg-design-beige">
-      <TopBanner />
       <Navbar />
       <main className={`flex-1 ${!noPadding && !isHomePage ? 'pt-8 md:pt-12' : ''}`}>
         {children}

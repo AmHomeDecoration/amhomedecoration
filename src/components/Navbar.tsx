@@ -2,7 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, Menu, ShieldCheck, Database } from 'lucide-react';
+import { LogOut, Menu, ShieldCheck, Database, MapPin, Mail, Phone } from 'lucide-react';
+import { Facebook, Instagram } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -16,8 +17,39 @@ const Navbar = () => {
   const { isAuthenticated, signOut } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container flex h-20 items-center">
+    <header className="sticky top-0 z-50 w-full">
+      {/* Top banner with contact info */}
+      <div className="w-full bg-design-charcoal text-white py-2 px-4">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-xs md:text-sm">
+          <div className="flex items-center space-x-6 mb-2 md:mb-0">
+            <a href="https://maps.app.goo.gl/TBsNrz9Yzm3G7NWB7" className="flex items-center hover:text-design-gold transition-colors" target="_blank" rel="noopener noreferrer">
+              <MapPin size={14} className="mr-1" />
+              <span>9 b, route nationale, Argelès sur mer</span>
+            </a>
+            <a href="mailto:contact@amhomedecoration.com" className="flex items-center hover:text-design-gold transition-colors">
+              <Mail size={14} className="mr-1" />
+              <span>Contact@amhomedecoration.com</span>
+            </a>
+          </div>
+          <div className="flex items-center space-x-4">
+            <a href="tel:+33674984842" className="flex items-center hover:text-design-gold transition-colors">
+              <Phone size={14} className="mr-1" />
+              <span>(33) 06 74 98 48 42</span>
+            </a>
+            <div className="flex items-center space-x-3 ml-4">
+              <a href="#" className="hover:text-design-gold transition-colors">
+                <Facebook size={14} />
+              </a>
+              <a href="#" className="hover:text-design-gold transition-colors">
+                <Instagram size={14} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main navigation */}
+      <nav className="container flex h-20 items-center bg-background border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex items-center">
           <Link to="/" className="flex items-center justify-center">
             <img 
