@@ -1,13 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, isAuthenticated, hasTempAccess, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -128,14 +137,39 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <Button
-            variant="ghost"
-            className="inline-flex md:hidden"
-            onClick={toggleMenu}
-            aria-label="Menu"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </Button>
+          <div className="flex items-center gap-4">
+            {(isAuthenticated || hasTempAccess) && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <UserCircle className="h-6 w-6" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {isAuthenticated && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin">Administration</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={signOut}>
+                    Déconnexion
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            
+            <Button
+              variant="ghost"
+              className="inline-flex md:hidden"
+              onClick={toggleMenu}
+              aria-label="Menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -206,6 +240,28 @@ const Navbar = () => {
         >
           Contact
         </Link>
+        
+        {isAuthenticated && (
+          <>
+            <Link
+              to="/admin"
+              className="text-2xl font-medium"
+              onClick={closeMenu}
+            >
+              Administration
+            </Link>
+            <Button
+              onClick={() => {
+                signOut();
+                closeMenu();
+              }}
+              variant="outline"
+              className="mt-4"
+            >
+              Déconnexion
+            </Button>
+          </>
+        )}
       </div>
     </nav>
   );
