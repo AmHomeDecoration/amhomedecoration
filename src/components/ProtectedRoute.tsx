@@ -15,9 +15,9 @@ const ProtectedRoute = ({
   requiresAuth = true,
   requiresTempAccess = false
 }: ProtectedRouteProps) => {
-  const { user, hasTempAccess, loading, checkTempAccess } = useAuth();
+  const { user, loading, checkTempAccess } = useAuth();
   
-  // Vérifier à nouveau le jeton temporaire
+  // Vérifier l'accès temporaire
   const hasValidTempAccess = checkTempAccess();
 
   if (loading) {
@@ -28,16 +28,22 @@ const ProtectedRoute = ({
     );
   }
 
-  // Si l'accès temporaire est requis et que l'utilisateur n'a pas d'accès temporaire
-  if (requiresTempAccess && !hasValidTempAccess) {
+  // Si l'accès temporaire est requis mais non valide ET qu'un accès authentifié est requis mais non disponible
+  if ((requiresTempAccess && !hasValidTempAccess) && (requiresAuth && !user)) {
     return <Navigate to="/auth" />;
   }
 
-  // Si l'authentification est requise et que l'utilisateur n'est pas authentifié
-  if (requiresAuth && !user && !hasValidTempAccess) {
+  // Si seul l'accès authentifié est requis et que l'utilisateur n'est pas connecté
+  if (requiresAuth && !user && !requiresTempAccess) {
     return <Navigate to="/auth" />;
   }
 
+  // Si seul l'accès temporaire est requis et que l'utilisateur n'a pas d'accès temporaire
+  if (requiresTempAccess && !hasValidTempAccess && !requiresAuth) {
+    return <Navigate to="/auth" />;
+  }
+
+  // Dans tous les autres cas, afficher le contenu
   return <>{children}</>;
 };
 

@@ -11,7 +11,6 @@ import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
-import TableAdmin from "./pages/TableAdmin";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -25,29 +24,24 @@ const App: React.FC = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={
-              <ProtectedRoute requiresAuth={false} requiresTempAccess={true}>
-                <Index />
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<Index />} />
             <Route path="/prestations" element={
-              <ProtectedRoute requiresAuth={false} requiresTempAccess={true}>
-                <Layout>
-                  <Prestations />
-                </Layout>
-              </ProtectedRoute>
+              <Layout>
+                <Prestations />
+              </Layout>
             } />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={
-              <ProtectedRoute requiresAuth={true} requiresTempAccess={false}>
+              <ProtectedRoute requiresAuth={true}>
                 <Admin />
               </ProtectedRoute>
             } />
-            <Route path="/table-admin" element={
-              <ProtectedRoute requiresAuth={true} requiresTempAccess={false}>
+            {/* Route temporairement désactivée en raison d'erreurs TypeScript */}
+            {/* <Route path="/table-admin" element={
+              <ProtectedRoute requiresAuth={true}>
                 <TableAdmin />
               </ProtectedRoute>
-            } />
+            } /> */}
             {/* Handle hash routes for smoother navigation */}
             <Route path="/#home" element={<Navigate to="/" />} />
             <Route path="/#about" element={<Navigate to="/" />} />
