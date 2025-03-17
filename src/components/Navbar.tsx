@@ -1,270 +1,158 @@
-
-import React, { useState, useEffect } from 'react';
-import { Menu, X, UserCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { LogOut, Menu, ShieldCheck, Database } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { TopBanner } from './TopBanner';
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const { user, isAuthenticated, hasTempAccess, signOut } = useAuth();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const getNavLinkUrl = (path: string) => {
-    // If it's a section link (starts with #)
-    if (path.startsWith('#')) {
-      // If we're already on the homepage, just return the anchor
-      if (location.pathname === '/') {
-        return path;
-      }
-      // Otherwise, navigate to homepage + the anchor
-      return `/${path}`;
-    }
-    // For regular pages, return the path as is
-    return path;
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    closeMenu();
-  };
+  const { isAuthenticated, signOut } = useAuth();
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-background/95 backdrop-blur-sm shadow-md py-2 mt-0'
-          : 'bg-transparent py-4 mt-7'
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center" onClick={scrollToTop}>
-            <img 
-              src="/lovable-uploads/0e4a3a7e-df4f-440f-8443-77e8984f4f00.png" 
-              alt="Anne Marie Home Décoration" 
-              className="h-12 md:h-16" 
-            />
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <TopBanner />
+      
+      <nav className="container flex h-16 items-center">
+        <div className="flex items-center lg:ml-8">
+          <Link to="/" className="flex items-center justify-center">
+            <span className="font-inter font-bold text-2xl hidden lg:inline-block">
+              EMPStudio
+            </span>
+            <span className="font-inter font-bold text-2xl inline-block lg:hidden">
+              EMPS
+            </span>
           </Link>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/" 
-              className="text-foreground hover:text-design-gold transition-colors font-medium"
-              onClick={scrollToTop}
-            >
-              Accueil
-            </Link>
-            <Link 
-              to={getNavLinkUrl('#about')} 
-              className="text-foreground hover:text-design-gold transition-colors font-medium"
-              onClick={(e) => {
-                if (location.pathname !== '/') {
-                  // Don't prevent default - let it navigate to homepage first
-                } else {
-                  // We're already on homepage, scroll to the section
-                  e.preventDefault();
-                  document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
-                }
-                closeMenu();
-              }}
-            >
-              À propos
-            </Link>
-            <Link 
-              to="/prestations" 
-              className="text-foreground hover:text-design-gold transition-colors font-medium"
-            >
-              Prestations
-            </Link>
-            <Link 
-              to={getNavLinkUrl('#projects')} 
-              className="text-foreground hover:text-design-gold transition-colors font-medium"
-              onClick={(e) => {
-                if (location.pathname !== '/') {
-                  // Don't prevent default - let it navigate to homepage first
-                } else {
-                  // We're already on homepage, scroll to the section
-                  e.preventDefault();
-                  document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-                }
-                closeMenu();
-              }}
-            >
-              Réalisations
-            </Link>
-            <Link 
-              to={getNavLinkUrl('#contact')} 
-              className="text-foreground hover:text-design-gold transition-colors font-medium"
-              onClick={(e) => {
-                if (location.pathname !== '/') {
-                  // Don't prevent default - let it navigate to homepage first
-                } else {
-                  // We're already on homepage, scroll to the section
-                  e.preventDefault();
-                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-                }
-                closeMenu();
-              }}
-            >
-              Contact
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {(isAuthenticated || hasTempAccess) && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <UserCircle className="h-6 w-6" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {isAuthenticated && (
-                    <>
-                      <DropdownMenuItem asChild>
-                        <Link to="/admin">Administration</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-                  <DropdownMenuItem onClick={signOut}>
-                    Déconnexion
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-            
-            <Button
-              variant="ghost"
-              className="inline-flex md:hidden"
-              onClick={toggleMenu}
-              aria-label="Menu"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </Button>
-          </div>
         </div>
-      </div>
 
-      <div
-        className={`fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center space-y-8 transition-all duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        } md:hidden`}
-      >
-        <Link
-          to="/"
-          className="text-2xl font-medium"
-          onClick={scrollToTop}
-        >
-          Accueil
-        </Link>
-        <Link
-          to={getNavLinkUrl('#about')}
-          className="text-2xl font-medium"
-          onClick={(e) => {
-            if (location.pathname !== '/') {
-              // Don't prevent default - let it navigate to homepage first
-            } else {
-              // We're already on homepage, scroll to the section
-              e.preventDefault();
-              document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
-            }
-            closeMenu();
-          }}
-        >
-          À propos
-        </Link>
-        <Link
-          to="/prestations"
-          className="text-2xl font-medium"
-          onClick={closeMenu}
-        >
-          Prestations
-        </Link>
-        <Link
-          to={getNavLinkUrl('#projects')}
-          className="text-2xl font-medium"
-          onClick={(e) => {
-            if (location.pathname !== '/') {
-              // Don't prevent default - let it navigate to homepage first
-            } else {
-              // We're already on homepage, scroll to the section
-              e.preventDefault();
-              document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-            }
-            closeMenu();
-          }}
-        >
-          Réalisations
-        </Link>
-        <Link
-          to={getNavLinkUrl('#contact')}
-          className="text-2xl font-medium"
-          onClick={(e) => {
-            if (location.pathname !== '/') {
-              // Don't prevent default - let it navigate to homepage first
-            } else {
-              // We're already on homepage, scroll to the section
-              e.preventDefault();
-              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-            }
-            closeMenu();
-          }}
-        >
-          Contact
-        </Link>
-        
-        {isAuthenticated && (
-          <>
-            <Link
-              to="/admin"
-              className="text-2xl font-medium"
-              onClick={closeMenu}
-            >
-              Administration
-            </Link>
-            <Button
-              onClick={() => {
-                signOut();
-                closeMenu();
-              }}
-              variant="outline"
-              className="mt-4"
-            >
-              Déconnexion
-            </Button>
-          </>
-        )}
-      </div>
-    </nav>
+        <div className="flex-1 flex justify-center">
+          <ul className="hidden lg:flex items-center gap-6 text-sm font-medium">
+            <li>
+              <Link to="/#home" className="hover:text-primary transition-colors duration-200">
+                Accueil
+              </Link>
+            </li>
+            <li>
+              <Link to="/#about" className="hover:text-primary transition-colors duration-200">
+                À Propos
+              </Link>
+            </li>
+            <li>
+              <Link to="/#projects" className="hover:text-primary transition-colors duration-200">
+                Projets
+              </Link>
+            </li>
+            <li>
+              <Link to="/#contact" className="hover:text-primary transition-colors duration-200">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/prestations" className="hover:text-primary transition-colors duration-200">
+                Prestations
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="flex items-center mr-2 lg:mr-0">
+          <UserMenu />
+          
+          {isAuthenticated && (
+            <div className="ml-4 hidden md:flex items-center gap-2">
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/admin">Administration</Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/table-admin">Gestion Tables</Link>
+              </Button>
+              <Button variant="outline" size="sm" onClick={signOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Déconnexion
+              </Button>
+            </div>
+          )}
+          
+          <Sheet>
+            <SheetTrigger asChild className="lg:hidden">
+              <Button variant="ghost" size="sm">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader className="mb-4">
+                <SheetTitle>EMPStudio</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4">
+                <li>
+                  <Link to="/#home" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    Accueil
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#about" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    À Propos
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#projects" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    Projets
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#contact" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/prestations" className="hover:text-primary transition-colors duration-200 flex items-center py-2">
+                    Prestations
+                  </Link>
+                </li>
+                
+                {isAuthenticated && (
+                  <>
+                    <Link to="/admin" className="flex items-center py-2">
+                      <ShieldCheck className="mr-2 h-4 w-4" />
+                      Administration
+                    </Link>
+                    <Link to="/table-admin" className="flex items-center py-2">
+                      <Database className="mr-2 h-4 w-4" />
+                      Gestion Tables
+                    </Link>
+                    <Button variant="outline" className="w-full" onClick={signOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Déconnexion
+                    </Button>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </nav>
+    </header>
   );
+};
+
+const UserMenu = () => {
+  const { user } = useAuth();
+
+  if (user) {
+    return (
+      <div className="hidden md:flex items-center">
+        <span className="text-sm font-medium mr-2">{user.email}</span>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default Navbar;
