@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { TopBanner } from './TopBanner';
+import TopBanner from './TopBanner';
 
 const Navbar = () => {
   const { isAuthenticated, signOut } = useAuth();
