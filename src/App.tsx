@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Layout from "./components/Layout";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import TableAdmin from "./pages/TableAdmin";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -36,12 +37,11 @@ const App: React.FC = () => (
                 <Admin />
               </ProtectedRoute>
             } />
-            {/* Route temporairement désactivée en raison d'erreurs TypeScript */}
-            {/* <Route path="/table-admin" element={
+            <Route path="/table-admin" element={
               <ProtectedRoute requiresAuth={true}>
                 <TableAdmin />
               </ProtectedRoute>
-            } /> */}
+            } />
             {/* Handle hash routes for smoother navigation */}
             <Route path="/#home" element={<Navigate to="/" />} />
             <Route path="/#about" element={<Navigate to="/" />} />

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader, RefreshCw, Save, Plus, Trash2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { Database } from '@/integrations/supabase/types';
+
+// Définir les types spécifiques pour chaque table
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
+type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
+type TempTokenRow = Database['public']['Tables']['temporary_access_tokens']['Row'];
+type TempTokenInsert = Database['public']['Tables']['temporary_access_tokens']['Insert'];
 
 interface TableSchema {
   name: string;
@@ -25,7 +33,7 @@ interface TableData {
   [key: string]: any;
 }
 
-// Type guard to check if a table name is valid for Supabase query
+// Type guard pour vérifier si un nom de table est valide pour la requête Supabase
 const isValidTableName = (tableName: string): tableName is "profiles" | "temporary_access_tokens" => {
   return tableName === "profiles" || tableName === "temporary_access_tokens";
 };
@@ -222,7 +230,7 @@ const TableAdmin = () => {
       }
       
       if (col.type.includes('int')) {
-        emptyRow[col.name] = '0';
+        emptyRow[col.name] = '0'; // Initialiser comme string
       } else if (col.type.includes('bool')) {
         emptyRow[col.name] = false;
       } else if (col.type.includes('json')) {
@@ -259,25 +267,79 @@ const TableAdmin = () => {
     
     try {
       if (isCreating && newRow) {
-        const { data, error } = await supabase
-          .from(currentTable)
-          .insert([newRow])
-          .select();
-        
-        if (error) throw error;
+        // Conversion explicite en fonction de la table
+        if (currentTable === 'profiles') {
+          const profileData: ProfileInsert = {
+            id: newRow.id || undefined,
+            username: newRow.username || null,
+            avatar_url: newRow.avatar_url || null,
+            created_at: newRow.created_at || undefined
+          };
+          
+          const { data, error } = await supabase
+            .from(currentTable)
+            .insert([profileData])
+            .select();
+          
+          if (error) throw error;
+        } else if (currentTable === 'temporary_access_tokens') {
+          const tokenData: TempTokenInsert = {
+            id: newRow.id || undefined,
+            token: newRow.token || '',
+            valid_until: newRow.valid_until || '',
+            created_at: newRow.created_at || undefined,
+            created_by: newRow.created_by || null,
+            used_at: newRow.used_at || null,
+            is_active: newRow.is_active !== undefined ? newRow.is_active : true
+          };
+          
+          const { data, error } = await supabase
+            .from(currentTable)
+            .insert([tokenData])
+            .select();
+          
+          if (error) throw error;
+        }
         
         toast({
           title: "Succès",
           description: "Ligne ajoutée avec succès.",
         });
       } else if (editingRow) {
-        const { data, error } = await supabase
-          .from(currentTable)
-          .update(editingRow)
-          .match(getPrimaryKeyMatch(editingRow))
-          .select();
-        
-        if (error) throw error;
+        if (currentTable === 'profiles') {
+          const profileData: Partial<ProfileRow> = {
+            id: editingRow.id,
+            username: editingRow.username || null,
+            avatar_url: editingRow.avatar_url || null,
+            created_at: editingRow.created_at
+          };
+          
+          const { data, error } = await supabase
+            .from(currentTable)
+            .update(profileData)
+            .match(getPrimaryKeyMatch(editingRow))
+            .select();
+          
+          if (error) throw error;
+        } else if (currentTable === 'temporary_access_tokens') {
+          const tokenData: Partial<TempTokenRow> = {
+            id: editingRow.id,
+            token: editingRow.token,
+            valid_until: editingRow.valid_until,
+            created_at: editingRow.created_at,
+            created_by: editingRow.created_by || null,
+            used_at: editingRow.used_at || null,
+            is_active: editingRow.is_active !== undefined ? editingRow.is_active : true
+          };
+          
+          const { data, error } = await supabase
+            .from(currentTable)
+            .update(tokenData)
+            .match(getPrimaryKeyMatch(editingRow))
+            .select();
+          
+          if (error) throw error;
+        }
         
         toast({
           title: "Succès",
